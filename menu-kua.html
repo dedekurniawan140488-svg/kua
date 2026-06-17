@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informasi Layanan Digital KUA</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: #f2f7f4; color: #2c3e50; padding: 15px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 650px; background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        
+        .header { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 3px solid #00796b; }
+        .header h2 { color: #004d40; font-size: 20px; }
+        .header p { font-size: 13px; color: #00796b; font-weight: bold; margin-top: 5px; }
+
+        #syncStatus { font-size: 12px; font-weight: bold; text-align: center; margin-bottom: 15px; padding: 8px; border-radius: 6px; }
+        .sync-loading { background: #e0f2f1; color: #004d40; border: 1px solid #b2dfdb; }
+        .sync-success { background: #e8f5e9; color: #1b5e20; border: 1px solid #a5d6a7; }
+        .sync-failed { background: #ffebee; color: #b71c1c; border: 1px solid #ef9a9a; }
+
+        .search-box { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #b2dfdb; border-radius: 8px; font-size: 15px; outline: none; }
+        .search-box:focus { border-color: #00796b; box-shadow: 0 0 5px rgba(0,121,107,0.3); }
+
+        .layanan-card { background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 15px; padding: 15px; transition: transform 0.2s; position: relative; overflow: hidden; }
+        .layanan-card:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        .layanan-title { font-size: 16px; color: #004d40; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        
+        .info-row { margin-bottom: 8px; font-size: 13.5px; line-height: 1.5; }
+        .info-label { font-weight: bold; color: #555; display: block; margin-bottom: 2px; }
+        .info-content { color: #333; background: #f9f9f9; padding: 6px 10px; border-radius: 4px; border-left: 3px solid #00796b; }
+        
+        .badge-biaya { display: inline-block; padding: 3px 8px; background: #e0f2f1; color: #004d40; border-radius: 4px; font-weight: bold; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>Pusat Informasi Layanan KUA</h2>
+        <p>Sistem Informasi Syarat & Tarif Resmi Transparan</p>
+    </div>
+
+    <!-- Status Koneksi -->
+    <div id="syncStatus" class="sync-loading">🔄 Sinkronisasi informasi dengan Database KUA...</div>
+
+    <!-- Fitur Cari Layanan -->
+    <input type="text" id="cariInput" class="search-box" placeholder="🔍 Cari layanan (misal: nikah, rekomendasi)..." onkeyup="filterLayanan()">
+
+    <!-- Wadah Data yang ditarik dari Google Sheets -->
+    <div id="daftarLayanan">
+        <p style="text-align: center; color: #888; font-size: 14px;">Memuat data dokumen...</p>
+    </div>
+</div>
+
+<script>
+    // ⚠️ GANTI dengan ID Spreadsheet Baru Anda yang berisi data Layanan KUA
+    const SPREADSHEET_ID = "1NitjaaXoZn0Wy7eSlCwPOIB9r7JqEtIpIzBYfUwgvtI"; 
+
+    let dataLayananGlobal = [];
+
+    async function ambilDataKUA() {
+        const statusBox = document.getElementById('syncStatus');
+        const wadahData = document.getElementById('daftarLayanan');
+        const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv`;
+
+        try {
+            const controller = new AbortController();
+            const idTimeout = setTimeout(() => controller.abort(), 6000);
+
+            const respon = await fetch(url, { signal: controller.signal });
+            clearTimeout(idTimeout);
+
+            if (!respon.ok) throw new Error("Akses ditolak");
+            
+            const dataTeks = await respon.text();
+            const baris = dataTeks.split(/\r?\n/);
+            
+            if (baris.length < 2) throw new Error("Data Kosong");
+
+            dataLayananGlobal = [];
+            
+            // Membaca baris mulai indeks 1 (mengabaikan judul kolom baris ke-0)
+            for (let i = 1; i < baris.length; i++) {
+                if (!baris[i].trim()) continue;
+                
+                // Memecah CSV berdasarkan tanda kutip secara rapi
+                const kolom = baris[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
+                if (kolom.length >= 3) {
+                    const nama = kolom[0].replace(/"/g, "").trim();
+                    const syarat = kolom[1].replace(/"/g, "").trim();
+                    const biaya = kolom[2].replace(/"/g, "").trim();
+                    const waktu = kolom[3] ? kolom[3].replace(/"/g, "").trim() : "-";
+
+                    dataLayananGlobal.push({ nama, syarat, biaya, waktu });
+                }
+            }
+
+            statusBox.innerText = "✅ Data Layanan Sinkron & Sesuai Aturan Kemenag";
+            statusBox.className = "sync-status sync-success";
+            
+            tampilkanData(dataLayananGlobal);
+
+        } catch (error) {
+            console.error(error);
+            statusBox.innerText = "❌ Gagal memuat database online. Silakan hubungi petugas KUA.";
+            statusBox.className = "sync-status sync-failed";
+            wadahData.innerHTML = `<p style="text-align:center; color:red; font-size:14px;">Gagal memuat informasi otomatis. Periksa koneksi internet Anda.</p>`;
+        }
+    }
+
+    function tampilkanData(data) {
+        const wadahData = document.getElementById('daftarLayanan');
+        if (data.length === 0) {
+            wadahData.innerHTML = `<p style="text-align:center; color:#888; font-size:14px;">Layanan tidak ditemukan.</p>`;
+            return;
+        }
+
+        let htmlElemen = "";
+        data.forEach(item => {
+            htmlElemen += `
+                <div class="layanan-card">
+                    <div class="layanan-title">📋 ${item.nama}</div>
+                    <div class="info-row">
+                        <span class="info-label">Syarat Dokumen berkas:</span>
+                        <div class="info-content">${item.syarat}</div>
+                    </div>
+                    <div class="info-row" style="display: flex; gap: 15px; margin-top: 10px;">
+                        <div>
+                            <span class="info-label">Biaya Resmi:</span>
+                            <span class="badge-biaya">${item.biaya}</span>
+                        </div>
+                        <div>
+                            <span class="info-label">Estimasi Selesai:</span>
+                            <span style="font-size: 13px; font-weight: bold; color: #004d40;">⏱️ ${item.waktu}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        wadahData.innerHTML = htmlElemen;
+    }
+
+    function filterLayanan() {
+        const kataKunci = document.getElementById('cariInput').value.toLowerCase();
+        const hasilFilter = dataLayananGlobal.filter(item => {
+            return item.nama.toLowerCase().includes(kataKunci) || item.syarat.toLowerCase().includes(kataKunci);
+        });
+        tampilkanData(hasilFilter);
+    }
+
+    window.onload = ambilDataKUA;
+</script>
+</body>
+</html>
