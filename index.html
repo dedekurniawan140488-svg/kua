@@ -322,7 +322,7 @@
         <div id="layanan" class="halaman">
             <div class="seksi">
                 <h2>Menu Layanan KUA</h2>
-                <p class="no-print" style="margin-bottom: 20px; color:#555;">Berikut adalah daftar jenis pelayanan publik yang tersedia di KUA Kantor Kecamatan:</p>
+                <p class="no-print" style="margin-bottom: 20px; color:#555;">Berikut adalah daftar jenis pelayanan publik yang tersedia di KUA Tambusai Utara:</p>
                 <div id="konten-layanan">
                     <!-- Data layanan masuk otomatis di sini -->
                 </div>
@@ -332,8 +332,8 @@
         <!-- 3. HALAMAN INFORMASI -->
         <div id="informasi" class="halaman">
             <div class="seksi">
-                <h2>Informasi & Alur Persyaratan</h2>
-                <p class="no-print" style="margin-bottom: 20px; color:#555;">Panduan tarif biaya dan berkas persyaratan dokumen resmi:</p>
+                <h2>Layanan Informasi</h2>
+                <p class="no-print" style="margin-bottom: 20px; color:#555;"></p>
                 <div id="konten-informasi">
                     <!-- Data informasi masuk otomatis di sini -->
                 </div>
@@ -513,7 +513,7 @@
                 wadah.innerHTML = '<p>Daftar informasi kosong.</p>';
                 return;
             }
-            let html = '<table><thead><tr><th>Kategori / Keperluan</th><th>Persyaratan / Keterangan</th></tr></thead><tbody>';
+            let html = '<table><thead><tr><th>Kategori</th><th>Keterangan</th></tr></thead><tbody>';
             data.forEach(item => {
                 const kategori = item['Kategori'] || item['kategori'] || '-';
                 const keterangan = item['Keterangan'] || item['keterangan'] || '-';
