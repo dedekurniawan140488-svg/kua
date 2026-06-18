@@ -28,40 +28,35 @@
             line-height: 1.6;
         }
 
-        /* --- HEADER & NAVIGASI --- */
-        header {
-            background-color: var(--warna-kua);
-            color: white;
-            padding: 15px 0;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            
-            /* Ini kunci agar menu tetap menempel di atas saat di-scroll */
+        /* --- PEMBUNGKUS MENU & RUNNING TEXT UNTUK SOLUSI LAYAR --- */
+        .header-fixed-wrapper {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            z-index: 1000; /* Memastikan menu selalu berada di lapisan paling atas */
-        }
-    
-        /* --- GAYA TEKS BERJALAN (LEBIH TEGAS & KONTRAS) --- */
-        .running-text-container {
-            background-color: #ffc107; /* Warna kuning emas asli KUA */
-            color: #0b3d26; /* Hijau KUA yang digelapkan sedikit agar ekstra kontras */
-            padding: 8px 0; /* Dipertebal sedikit atas-bawahnya */
-            font-weight: 800; /* Menggunakan Extra Bold agar teks sangat tegas */
-            font-size: 1.05rem; /* Ukuran huruf dinaikkan sedikit agar jelas */
-            letter-spacing: 0.5px; /* Memberi jarak antar huruf agar tidak dempet */
-            box-shadow: 0 3px 6px rgba(0,0,0,0.12); /* Bayangan dipertegas */
-            position: fixed;
-            top: 100px; 
-            left: 0;
-            width: 100%;
-            z-index: 999;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.12);
         }
 
-        /* Tambahan agar teks di dalam marquee memiliki efek penegas */
+        header {
+            background-color: var(--warna-kua);
+            color: white;
+            padding: 12px 0;
+        }
+    
+        /* --- GAYA TEKS BERJALAN (SANGAT TEGAS & KONTRAS) --- */
+        .running-text-container {
+            background-color: var(--warna-aksen); /* Warna kuning aksen KUA */
+            color: #0b3d26; /* Hijau tua gelap agar kontras tinggi */
+            padding: 8px 0;
+            font-weight: 800; /* Extra Bold agar sangat ketara */
+            font-size: 1.05rem; /* Ukuran huruf dinaikkan sedikit */
+            letter-spacing: 0.5px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+        }
+
         #kalender-berjalan {
-            text-shadow: 0.2px 0.2px 0px rgba(255, 255, 255, 0.5); /* Efek teks timbul halus */
+            text-shadow: 0.2px 0.2px 0px rgba(255, 255, 255, 0.4);
         }
     
         .header-container {
@@ -109,7 +104,7 @@
         main {
             width: 90%;
             max-width: 1200px;
-            margin: 160px auto 30px auto; /* Jarak atas disesuaikan untuk laptop */
+            margin: 180px auto 30px auto; /* Jarak aman atas awal */
             min-height: 70vh;
         }
 
@@ -245,7 +240,7 @@
 
         /* --- ATURAN CETAK (PRINT) --- */
         @media print {
-            header, nav, .btn-cetak, footer, .no-print, .running-text-container {
+            header, nav, .btn-cetak, footer, .no-print, .running-text-container, .header-fixed-wrapper {
                 display: none !important;
             }
             body {
@@ -279,66 +274,74 @@
             }
         }
 
-        /* --- RESPONSIVE TABLET / HP --- */
+        /* --- PERBAIKAN RESPONSIVE TIMBAL BALIK (TABLET & HP) --- */
         @media (max-width: 768px) {
+            .logo-kua h1 { font-size: 1.4rem; }
+            .logo-kua p { font-size: 0.8rem; }
+            .alamat-head { display: none; } /* Sembunyikan alamat di HP agar hemat ruang vertikal */
+            
             .header-container {
                 flex-direction: column;
-                gap: 15px;
+                gap: 10px;
                 text-align: center;
             }
             nav ul {
-                gap: 10px;
+                gap: 8px;
             }
             nav ul li a {
-                padding: 6px 12px;
-                font-size: 0.9rem;
-            }
-            .running-text-container {
-                top: 135px; /* Menyesuaikan posisi teks berjalan di tablet/HP */
+                padding: 5px 12px;
+                font-size: 0.85rem;
             }
             main {
-                margin-top: 200px; /* Jarak longgar agar konten tidak menyatu/tertutup menu atas */
+                margin-top: 215px; /* Jarak aman portrait agar tidak menempel */
+            }
+        }
+
+        /* Aturan Khusus jika HP dalam posisi Miring/Landscape */
+        @media (max-height: 500px) and (max-width: 900px) {
+            header { padding: 6px 0; }
+            .logo-kua p { display: none; }
+            .header-container { flex-direction: row; justify-content: space-between; }
+            main {
+                margin-top: 125px; /* Jarak atas otomatis menyusut pas saat posisi landscape */
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
-    <header>
-        <div class="header-container">
-            <div class="logo-kua">
-                <h1>KUA DIGITAL</h1>
-                <p>TAMBUSAI UTARA</p>
-                <p>Jl. Sultan Zainal Abidinsyah Rantau Kasai</p>
+    <div class="header-fixed-wrapper">
+        <header>
+            <div class="header-container">
+                <div class="logo-kua">
+                    <h1>KUA DIGITAL</h1>
+                    <p>TAMBUSAI UTARA</p>
+                    <p class="alamat-head">Jl. Sultan Zainal Abidinsyah Rantau Kasai</p>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a onclick="bukaHalaman('beranda')" class="active">Beranda</a></li>
+                        <li><a onclick="bukaHalaman('layanan')">Layanan</a></li>
+                        <li><a onclick="bukaHalaman('informasi')">Informasi</a></li>
+                    </ul>
+                </nav>
             </div>
-            <nav>
-                <ul>
-                    <li><a onclick="bukaHalaman('beranda')" class="active">Beranda</a></li>
-                    <li><a onclick="bukaHalaman('layanan')">Layanan</a></li>
-                    <li><a onclick="bukaHalaman('informasi')">Informasi</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+        </header>
 
-    <!-- TEKS BERJALAN KALENDER MASEHI & HIJRIAH -->
-    <div class="running-text-container">
-        <marquee behavior="scroll" direction="left" scrollamount="5" id="kalender-berjalan">
-            Memuat kalender digital KUA...
-        </marquee>
+        <div class="running-text-container">
+            <marquee behavior="scroll" direction="left" scrollamount="5" id="kalender-berjalan">
+                Memuat kalender digital KUA...
+            </marquee>
+        </div>
     </div>
 
-    <!-- KONTEN UTAMA -->
     <main>
         
-        <!-- 1. HALAMAN BERANDA -->
         <div id="beranda" class="halaman aktif">
             <div class="seksi">
                 <h2>Berita Kegiatan</h2>
                 <div id="konten-berita" class="grid-berita">
-                    <!-- Data berita masuk otomatis di sini -->
-                </div>
+                    </div>
             </div>
 
             <div class="seksi">
@@ -359,43 +362,36 @@
                             </tr>
                         </thead>
                         <tbody id="data-nikah">
-                            <!-- Data pengumuman masuk otomatis di sini -->
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- 2. HALAMAN LAYANAN -->
         <div id="layanan" class="halaman">
             <div class="seksi">
                 <h2>Menu Layanan KUA</h2>
                 <p class="no-print" style="margin-bottom: 20px; color:#555;">Berikut adalah daftar jenis pelayanan publik yang tersedia di KUA Tambusai Utara:</p>
                 <div id="konten-layanan">
-                    <!-- Data layanan masuk otomatis di sini -->
-                </div>
+                    </div>
             </div>
         </div>
 
-        <!-- 3. HALAMAN INFORMASI -->
         <div id="informasi" class="halaman">
             <div class="seksi">
                 <h2>Layanan Informasi</h2>
                 <p class="no-print" style="margin-bottom: 20px; color:#555;"></p>
                 <div id="konten-informasi">
-                    <!-- Data informasi masuk otomatis di sini -->
-                </div>
+                    </div>
             </div>
         </div>
 
     </main>
 
-    <!-- FOOTER -->
     <footer>
         <p>&copy; 2026 KUA Digital Hak Cipta Allah SWT</p>
     </footer>
 
-    <!-- INTERAKSI JAVASCRIPT & GOOGLE SHEETS -->
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4XocjTGdF5RYORfDG3yCfkxN5nM4cEvbvpSeos0xlKcvJrBgjgiWsCvxO2zsdy-Jx/exec";
 
@@ -443,7 +439,6 @@
             }
         }
         
-        // Bantuan mencari nilai kolom dan otomatis merapikan format tanggal ISO jika ditemukan
         function dapatkanNilaiKolom(item, kataKunci) {
             const kunciDitemukan = Object.keys(item).find(k => k.toLowerCase().trim() === kataKunci.toLowerCase().trim());
             if (!kunciDitemukan) return null;
@@ -468,7 +463,6 @@
             return nilai;
         }
 
-        // Tampilkan Tab Berita
         function prosesBerita(data) {
             const wadah = document.getElementById('konten-berita');
             if (!data || data.length === 0) {
@@ -502,7 +496,6 @@
             wadah.innerHTML = html;
         }
 
-        // Tampilkan Tab Pengumuman Kehendak Nikah beserta Foto Pengantin
         function prosesPengumumkan(data) {
             const wadah = document.getElementById('data-nikah');
             if (!data || data.length === 0) {
@@ -545,7 +538,6 @@
             wadah.innerHTML = html;
         }
 
-        // Tampilkan Tab Layanan
         function prosesLayanan(data) {
             const wadah = document.getElementById('konten-layanan');
             if (!wadah) return;
@@ -569,7 +561,6 @@
             wadah.innerHTML = html;
         }
 
-        // Tampilkan Tab Informasi Persyaratan
         function prosesInformasi(data) {
             const wadah = document.getElementById('konten-informasi');
             if (!wadah) return;
@@ -593,16 +584,12 @@
             wadah.innerHTML = html;
         }
 
-        // Fungsi Otomatis Membuat Kalender Masehi & Hijriah
-        // Fungsi Otomatis Membuat Kalender Masehi & Hijriah Rumus Aman Tablet
         function tampilkanKalenderDigital() {
             const sekarang = new Date();
             
-            // 1. Format Masehi
             const opsiMasehi = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             const masehiTeks = sekarang.toLocaleDateString('id-ID', opsiMasehi);
             
-            // 2. Rumus Hitung Hijriah Manual (Sangat Aman Untuk Semua Jenis Browser Tablet)
             let jd = Math.floor(sekarang.getTime() / 86400000) + 2440587.5;
             let l = Math.floor(jd - 1948440 + 10632);
             let n = Math.floor((l - 1) / 10631);
@@ -620,7 +607,6 @@
                 "Ramadhan", "Syawwal", "Dzulqa'dah", "Dzulhijjah"
             ];
             
-            // Penyesuaian hilal (bisa ditambah/kurang 1 jika tanggal hijriah meleset sehari)
             let tglHijriah = d - 1; 
             let blnHijriah = bulanHijriah[m - 1];
             let thnHijriah = y;
@@ -631,8 +617,6 @@
             }
             
             const hijriahTeks = `${tglHijriah} ${blnHijriah} ${thnHijriah} H`;
-
-            // 3. Teks Gabungan dimasukkan ke Marquee
             const teksLengkap = `Selamat Datang di KUA Digital Kecamatan Tambusai Utara | Hari Ini: ${masehiTeks} M / ${hijriahTeks} | Jagalah Protokol Kesehatan dan Tertib Administrasi Pernikahan.`;
             
             const elemenKalender = document.getElementById('kalender-berjalan');
@@ -641,8 +625,6 @@
             }
         }
 
-
-        // Jalankan semua fungsi saat halaman selesai dimuat
         window.addEventListener('DOMContentLoaded', () => {
             tampilkanKalenderDigital();
             ambilDataSpreadsheet();
