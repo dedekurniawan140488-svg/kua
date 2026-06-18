@@ -44,21 +44,21 @@
             background-color: var(--warna-kua);
             color: white;
             padding: 12px 0;
+            width: 100%;
         }
     
-        /* --- GAYA TEKS BERJALAN (SANGAT TEGAS & KONTRAS) --- */
+        /* --- GAYA TEKS BERJALAN (SANGAT TIPIS & RAMPING) --- */
         .running-text-container {
-            background-color: var(--warna-aksen); /* Warna kuning aksen KUA */
-            color: #0b3d26; /* Hijau tua gelap agar kontras tinggi */
-            padding: 2px 0; /* Dipertebal sedikit agar bar kuning lebih lega */
-            font-weight: 800; /* Extra Bold agar sangat ketara */
-            font-size: 0.60rem; /* Ukuran huruf mantap */
+            background-color: var(--warna-aksen); 
+            color: #0b3d26; 
+            padding: 2px 0; /* Bar kuning dibuat setipis mungkin */
+            font-weight: 800; 
+            font-size: 0.60rem; /* Huruf diperkecil pas */
             letter-spacing: 0.3px;
             border-top: 1px solid rgba(0,0,0,0.08);
             width: 100%;
-            line-height: 1.2; 
+            line-height: 1.2;
         }
-        
 
         #kalender-berjalan {
             text-shadow: 0.2px 0.2px 0px rgba(255, 255, 255, 0.4);
@@ -73,15 +73,29 @@
             align-items: center;
         }
 
+        .logo-kua {
+            display: flex;
+            flex-direction: column;
+        }
+
         .logo-kua h1 {
             font-size: 1.8rem;
             font-weight: 700;
             letter-spacing: 0.5px;
+            line-height: 1.2;
         }
 
         .logo-kua p {
             font-size: 0.9rem;
             color: var(--warna-aksen);
+            font-weight: 600;
+        }
+
+        .logo-kua .alamat-head {
+            font-size: 0.8rem;
+            color: #e0e0e0;
+            font-weight: normal;
+            margin-top: 2px;
         }
 
         nav ul {
@@ -98,6 +112,7 @@
             border-radius: 4px;
             transition: all 0.3s ease;
             cursor: pointer;
+            white-space: nowrap; /* Mencegah menu teks tertekuk ke bawah */
         }
 
         nav ul li a:hover, nav ul li a.active {
@@ -105,12 +120,12 @@
             color: var(--warna-kua);
         }
    
-        /* --- KONTEN UTAMA (Jarak atas diatur otomatis oleh JS) --- */
+        /* --- KONTEN UTAMA --- */
         main {
             width: 90%;
             max-width: 1200px;
             margin: 0 auto 30px auto; 
-            min-height: 50vh;
+            min-height: 70vh;
         }
 
         .halaman {
@@ -279,38 +294,38 @@
             }
         }
 
-        /* --- PERBAIKAN RESPONSIVE --- */
-        @media (max-width: 768px) {
-            .logo-kua h1 { font-size: 1.4rem; }
-            .logo-kua p { font-size: 0.8rem; }
-            .alamat-head { display: none; } /* Sembunyikan alamat di HP agar hemat ruang vertikal */
-            
+        /* --- SCRIPT RESPONSIVE BARU (MENYESUAIKAN FONT, BUKAN MENGHAPUS TEKS) --- */
+        @media (max-width: 992px) {
+            header {
+                padding: 8px 0;
+            }
             .header-container {
                 flex-direction: column;
-                gap: 10px;
+                gap: 8px;
                 text-align: center;
             }
+            .logo-kua h1 { 
+                font-size: 1.4rem; 
+            }
+            .logo-kua p { 
+                font-size: 0.85rem; 
+            }
+            .logo-kua .alamat-head {
+                font-size: 0.75rem;
+            }
             nav ul {
-                gap: 8px;
+                gap: 6px;
             }
             nav ul li a {
-                padding: 5px 12px;
-                font-size: 0.85rem;
+                padding: 4px 10px;
+                font-size: 0.8rem;
             }
-        }
-
-        @media (max-height: 500px) and (max-width: 900px) {
-            header { padding: 6px 0; }
-            .logo-kua p { display: none; }
-            .header-container { flex-direction: row; justify-content: space-between; }
         }
     </style>
 </head>
 <body>
 
-    <!-- PEMBUNGKUS ATAS FIXED (MENU + TEKS BERJALAN MENJADI SATU KESATUAN) -->
     <div class="header-fixed-wrapper" id="pembungkus-atas">
-        <!-- HEADER KUA -->
         <header>
             <div class="header-container">
                 <div class="logo-kua">
@@ -328,7 +343,6 @@
             </div>
         </header>
 
-        <!-- TEKS BERJALAN KALENDER MASEHI & HIJRIAH -->
         <div class="running-text-container">
             <marquee behavior="scroll" direction="left" scrollamount="5" id="kalender-berjalan">
                 Memuat kalender digital KUA...
@@ -336,16 +350,13 @@
         </div>
     </div>
 
-    <!-- KONTEN UTAMA -->
     <main id="konten-utama">
         
-        <!-- 1. HALAMAN BERANDA -->
         <div id="beranda" class="halaman aktif">
             <div class="seksi">
                 <h2>Berita Kegiatan</h2>
                 <div id="konten-berita" class="grid-berita">
-                    <!-- Data berita masuk otomatis di sini -->
-                </div>
+                    </div>
             </div>
 
             <div class="seksi">
@@ -366,50 +377,41 @@
                             </tr>
                         </thead>
                         <tbody id="data-nikah">
-                            <!-- Data pengumuman masuk otomatis di sini -->
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- 2. HALAMAN LAYANAN -->
         <div id="layanan" class="halaman">
             <div class="seksi">
                 <h2>Menu Layanan KUA</h2>
                 <p class="no-print" style="margin-bottom: 20px; color:#555;">Berikut adalah daftar jenis pelayanan publik yang tersedia di KUA Tambusai Utara:</p>
                 <div id="konten-layanan">
-                    <!-- Data layanan masuk otomatis di sini -->
-                </div>
+                    </div>
             </div>
         </div>
 
-        <!-- 3. HALAMAN INFORMASI -->
         <div id="informasi" class="halaman">
             <div class="seksi">
                 <h2>Layanan Informasi</h2>
                 <p class="no-print" style="margin-bottom: 20px; color:#555;"></p>
                 <div id="konten-informasi">
-                    <!-- Data informasi masuk otomatis di sini -->
-                </div>
+                    </div>
             </div>
         </div>
 
     </main>
 
-    <!-- FOOTER -->
     <footer>
         <p>&copy; 2026 KUA Digital Hak Cipta Allah SWT</p>
     </footer>
 
-    <!-- INTERAKSI JAVASCRIPT & GOOGLE SHEETS -->
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4XocjTGdF5RYORfDG3yCfkxN5nM4cEvbvpSeos0xlKcvJrBgjgiWsCvxO2zsdy-Jx/exec";
 
-        // Fungsi Baru: Menghitung Jarak Atas Secara Otomatis Akurat
         function sesuaikanJarakKontenAtas() {
             const tinggiWrapper = document.getElementById('pembungkus-atas').offsetHeight;
-            // Berikan tambahan jarak 25px dari batas bawah running text agar estetis dan longgar
             document.getElementById('konten-utama').style.marginTop = (tinggiWrapper + 25) + "px";
         }
 
@@ -430,7 +432,6 @@
             if (menuAktif) {
                 menuAktif.classList.add('active');
             }
-            // Jalankan ulang kalkulasi jarak jika halaman berpindah
             sesuaikanJarakKontenAtas();
         }
 
@@ -452,7 +453,6 @@
                 prosesLayanan(database['layanan']);
                 prosesInformasi(database['informasi']);
                 
-                // Kalkulasi ulang setelah data eksternal sukses dirender
                 setTimeout(sesuaikanJarakKontenAtas, 100);
 
             } catch (error) {
@@ -611,7 +611,7 @@
             const sekarang = new Date();
             
             const opsiMasehi = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const masehiTeks = sekarang.toLocaleDateString('id-ID', opsiMasehi);
+            const masehiTeks = machinedDate = sekarang.toLocaleDateString('id-ID', opsiMasehi);
             
             let jd = Math.floor(sekarang.getTime() / 86400000) + 2440587.5;
             let l = Math.floor(jd - 1948440 + 10632);
@@ -648,7 +648,6 @@
             }
         }
 
-        // Jalankan kalkulasi otomatis saat pertama kali dibuka & saat layar diputar/di-resize
         window.addEventListener('DOMContentLoaded', () => {
             tampilkanKalenderDigital();
             ambilDataSpreadsheet();
