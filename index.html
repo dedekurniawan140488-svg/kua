@@ -73,6 +73,20 @@
             align-items: center;
         }
 
+        /* --- GAYA BARU LOGO KEMENAG (MENYATU DENGAN TEKS JUDUL) --- */
+        .wrapper-judul-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .img-logo-kemenag {
+            height: 55px;
+            width: auto;
+            display: block;
+            object-fit: contain;
+        }
+
         .logo-kua {
             display: flex;
             flex-direction: column;
@@ -305,6 +319,13 @@
                 gap: 12px;
                 text-align: center;
             }
+            .wrapper-judul-logo {
+                flex-direction: row;
+                justify-content: center;
+            }
+            .img-logo-kemenag {
+                height: 45px; /* Logo mengecil sedikit di HP portrait */
+            }
             .logo-kua h1 { 
                 font-size: 1.5rem; 
             }
@@ -370,10 +391,14 @@
     <div class="header-fixed-wrapper" id="pembungkus-atas">
         <header>
             <div class="header-container">
-                <div class="logo-kua">
-                    <h1>KUA DIGITAL</h1>
-                    <p>TAMBUSAI UTARA</p>
-                    <p class="alamat-head">Jl. Sultan Zainal Abidinsyah Rantau Kasai</p>
+                <!-- PEMBUNGKUS BARU: Untuk menyatukan gambar logo Kemenag & teks KUA -->
+                <div class="wrapper-judul-logo">
+                    <div id="wadah-logo-kemenag"></div>
+                    <div class="logo-kua">
+                        <h1>KUA DIGITAL</h1>
+                        <p>TAMBUSAI UTARA</p>
+                        <p class="alamat-head">Jl. Sultan Zainal Abidinsyah Rantau Kasai</p>
+                    </div>
                 </div>
                 <nav>
                     <ul>
@@ -490,12 +515,28 @@
                 const respon = await fetch(SCRIPT_URL);
                 const database = await respon.json();
 
+                // ----- FUNGSI BARU: Mengambil & Menampilkan Logo Kemenag dari Tab Identitas -----
+                if (database['identitas'] && database['identitas'].length > 0) {
+                    const dataLogo = database['identitas'].find(item => {
+                        const namaElemen = dapatkanNilaiKolom(item, 'nama');
+                        return namaElemen && namaElemen.toLowerCase().includes('logo kemenag');
+                    });
+                    if (dataLogo) {
+                        const linkLogo = dapatkanNilaiKolom(dataLogo, 'link');
+                        if (linkLogo) {
+                            document.getElementById('wadah-logo-kemenag').innerHTML = `
+                                <img src="${linkLogo.toString().trim()}" class="img-logo-kemenag" alt="Logo Kemenag">
+                            `;
+                        }
+                    }
+                }
+
                 prosesBerita(database['berita'] || database['beranda']);
                 prosesPengumumkan(database['pengumuman']);
                 prosesLayanan(database['layanan']);
                 prosesInformasi(database['informasi']);
                 
-                setTimeout(sesuaikanJarakKontenAtas, 100);
+                setTimeout(sesuaikanJarakKontenAtas, 300); // Sedikit ditambah agar tinggi logo terhitung sempurna
 
             } catch (error) {
                 console.error("Gagal terhubung ke spreadsheet:", error);
