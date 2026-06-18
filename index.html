@@ -295,32 +295,61 @@
         }
 
         /* --- SCRIPT RESPONSIVE BARU (MENYESUAIKAN FONT, BUKAN MENGHAPUS TEKS) --- */
+        /* --- ATURAN RESPONSIVE MENU (PORTRAIT SUSUN BAWAH, LANDSCAPE SAMPING) --- */
         @media (max-width: 992px) {
             header {
-                padding: 8px 0;
+                padding: 10px 0;
             }
             .header-container {
                 flex-direction: column;
-                gap: 8px;
+                gap: 12px;
                 text-align: center;
             }
             .logo-kua h1 { 
-                font-size: 1.4rem; 
+                font-size: 1.5rem; 
             }
             .logo-kua p { 
-                font-size: 0.85rem; 
+                font-size: 0.9rem; 
             }
             .logo-kua .alamat-head {
                 font-size: 0.75rem;
             }
+
+            /* KUNCI UTAMA: Membuat 3 menu menyusun ke bawah saat portrait */
             nav ul {
-                gap: 6px;
+                flex-direction: column; 
+                width: 100%;
+                gap: 8px;
+            }
+            nav ul li {
+                width: 100%;
             }
             nav ul li a {
-                padding: 4px 10px;
-                font-size: 0.8rem;
+                display: block; /* Membuat tombol menu melebar penuh agar mudah ditekan */
+                padding: 6px 0;
+                font-size: 0.9rem;
             }
         }
+
+        /* KHUSUS LANDSCAPE: Jika layar miring/pendek, menu otomatis dikembalikan berjajar ke samping */
+        @media (max-height: 600px) and (max-width: 1024px) {
+            header { 
+                padding: 6px 0; 
+            }
+            .header-container { 
+                flex-direction: row; 
+                justify-content: space-between; 
+            }
+            nav ul { 
+                flex-direction: row; /* Menu kembali ke samping */
+                gap: 10px; 
+            }
+            nav ul li a { 
+                padding: 6px 12px; 
+                font-size: 0.85rem; 
+            }
+        }
+
     </style>
 </head>
 <body>
