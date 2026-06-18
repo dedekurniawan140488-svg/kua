@@ -349,10 +349,8 @@
 
     <!-- INTERAKSI JAVASCRIPT & GOOGLE SHEETS -->
     <script>
-        // Link Google Apps Script milikmu
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4XocjTGdF5RYORfDG3yCfkxN5nM4cEvbvpSeos0xlKcvJrBgjgiWsCvxO2zsdy-Jx/exec";
 
-        // Fungsi berpindah menu halaman
         function bukaHalaman(idHalaman) {
             document.querySelectorAll('.halaman').forEach(hal => {
                 hal.classList.remove('aktif');
@@ -366,16 +364,13 @@
                 halamanTujuan.classList.add('aktif');
             }
 
-            // Tandai menu navigasi yang sedang diklik
             const menuAktif = document.querySelector(`nav ul li a[onclick="bukaHalaman('${idHalaman}')"]`);
             if (menuAktif) {
                 menuAktif.classList.add('active');
             }
         }
 
-        // Membaca data Google Sheets
         async function ambilDataSpreadsheet() {
-            // Indikator loading teks sementara
             document.getElementById('konten-berita').innerHTML = '<p>Sedang memuat berita kegiatan...</p>';
             document.getElementById('data-nikah').innerHTML = '<tr><td colspan="6" style="text-align:center;">Memuat tabel pengumuman...</td></tr>';
             
@@ -388,16 +383,9 @@
                 const respon = await fetch(SCRIPT_URL);
                 const database = await respon.json();
 
-                // 1. PROSES TAB BERITA / BERANDA
                 prosesBerita(database['berita'] || database['beranda']);
-
-                // 2. PROSES TAB PENGUMUMAN
                 prosesPengumumkan(database['pengumuman']);
-
-                // 3. PROSES TAB LAYANAN
                 prosesLayanan(database['layanan']);
-
-                // 4. PROSES TAB INFORMASI
                 prosesInformasi(database['informasi']);
 
             } catch (error) {
@@ -405,6 +393,12 @@
                 document.getElementById('konten-berita').innerHTML = '<p style="color:red;">Gagal memuat berita. Periksa koneksi internet.</p>';
                 document.getElementById('data-nikah').innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Gagal mengambil data dari Google Sheets.</td></tr>';
             }
+        }
+
+        // Bantuan mencari nilai kolom tanpa sensitif huruf besar/kecil dan menghapus spasi luar
+        function dapatkanNilaiKolom(item, kataKunci) {
+            const kunciDitemukan = Object.keys(item).find(k => k.toLowerCase().trim() === kataKunci.toLowerCase().trim());
+            return kunciDitemukan ? item[kunciDitemukan] : null;
         }
 
         // Tampilkan Tab Berita
@@ -415,18 +409,19 @@
                 return;
             }
             let html = '';
-            // Tampilkan 3 berita terbaru dari bawah spreadsheet
             const dataTerbalik = [...data].reverse().slice(0, 3);
             
             dataTerbalik.forEach(item => {
-                const tanggal = item['Tanggal'] || item['tanggal'] || '-';
-                const judul = item['Judul'] || item['judul'] || 'Info Kegiatan';
-                const deskripsi = item['Deskripsi'] || item['deskripsi'] || '';
-                const linkGambar = item['Link Gambar'] || item['link gambar'] || item['Link Foto Kegiatan'] || item['link foto kegiatan'] || '';
+                const tanggal = dapatkanNilaiKolom(item, 'tanggal') || '-';
+                const judul = dapatkanNilaiKolom(item, 'judul') || 'Info Kegiatan';
+                const deskripsi = dapatkanNilaiKolom(item, 'deskripsi') || '';
+                
+                // Mendeteksi variasi nama kolom foto kegiatan
+                const linkGambar = dapatkanNilaiKolom(item, 'link gambar') || dapatkanNilaiKolom(item, 'link foto kegiatan') || dapatkanNilaiKolom(item, 'foto') || '';
 
                 html += `
                     <div class="berita-card">
-                        ${linkGambar ? `<img src="${linkGambar.trim()}" alt="Foto" class="berita-img" onerror="this.style.display='none';">` : ''}
+                        ${linkGambar ? `<img src="${linkGambar.toString().trim()}" alt="Foto" class="berita-img" onerror="this.style.display='none';">` : ''}
                         <div class="berita-info">
                             <p class="berita-tanggal">${tanggal}</p>
                             <h3>${judul}</h3>
@@ -447,28 +442,32 @@
             }
             let html = '';
             data.forEach((item, index) => {
-                const no = item['No'] || item['no'] || (index + 1);
-                const suami = item['Suami'] || item['suami'] || '-';
-                const istri = item['Istri'] || item['istri'] || '-';
-                const tgl = item['Tanggal Akad'] || item['tanggal akad'] || '-';
-                const jam = item['Jam'] || item['jam'] || item['Waktu'] || '-';
-                const lokasi = item['Lokasi'] || item['lokasi'] || '-';
+                const no = dapatkanNilaiKolom(item, 'no') || (index + 1);
+                const suami = dapatkanNilaiKolom(item, 'suami') || '-';
                 
-                const fotoSuami = item['Link Foto Suami'] || item['link foto suami'] || item['Foto Suami'] || '';
-                const fotoIstri = item['Link Foto Istri'] || item['link foto istri'] || item['Foto Istri'] || '';
+                // Perbaikan deteksi kolom istri (mencari variasi tulisan istri/isteri)
+                const istri = dapatkanNilaiKolom(item, 'istri') || dapatkanNilaiKolom(item, 'isteri') || '-';
+                
+                const tgl = dapatkanNilaiKolom(item, 'tanggal akad') || dapatkanNilaiKolom(item, 'tanggal') || '-';
+                const jam = dapatkanNilaiKolom(item, 'jam') || dapatkanNilaiKolom(item, 'waktu') || '-';
+                const lokasi = dapatkanNilaiKolom(item, 'lokasi') || dapatkanNilaiKolom(item, 'lokasi akad') || '-';
+                
+                // Mendeteksi variasi nama kolom foto pengantin
+                const fotoSuami = dapatkanNilaiKolom(item, 'link foto suami') || dapatkanNilaiKolom(item, 'foto suami') || '';
+                const fotoIstri = dapatkanNilaiKolom(item, 'link foto istri') || dapatkanNilaiKolom(item, 'link foto isteri') || dapatkanNilaiKolom(item, 'foto istri') || dapatkanNilaiKolom(item, 'foto isteri') || '';
 
                 html += `
                     <tr>
                         <td style="text-align:center;">${no}</td>
                         <td>
                             <div style="display:flex; align-items:center; gap:10px;">
-                                ${fotoSuami ? `<img src="${fotoSuami.trim()}" style="width:35px; height:45px; object-fit:cover; border-radius:3px; border:1px solid #ccc;" onerror="this.style.display='none';">` : ''}
+                                ${fotoSuami ? `<img src="${fotoSuami.toString().trim()}" style="width:35px; height:45px; object-fit:cover; border-radius:3px; border:1px solid #ccc;" onerror="this.style.display='none';">` : ''}
                                 <span>${suami}</span>
                             </div>
                         </td>
                         <td>
                             <div style="display:flex; align-items:center; gap:10px;">
-                                ${fotoIstri ? `<img src="${fotoIstri.trim()}" style="width:35px; height:45px; object-fit:cover; border-radius:3px; border:1px solid #ccc;" onerror="this.style.display='none';">` : ''}
+                                ${fotoIstri ? `<img src="${fotoIstri.toString().trim()}" style="width:35px; height:45px; object-fit:cover; border-radius:3px; border:1px solid #ccc;" onerror="this.style.display='none';">` : ''}
                                 <span>${istri}</span>
                             </div>
                         </td>
@@ -491,8 +490,8 @@
             }
             let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">';
             data.forEach(item => {
-                const nama = item['Nama Layanan'] || item['nama layanan'] || 'Layanan';
-                const detail = item['Penjelasan'] || item['penjelasan'] || '-';
+                const nama = dapatkanNilaiKolom(item, 'nama layanan') || 'Layanan';
+                const detail = dapatkanNilaiKolom(item, 'penjelasan') || '-';
 
                 html += `
                     <div style="background:#f9f9f9; padding:20px; border-radius:6px; border-left:4px solid var(--warna-kua);">
@@ -515,8 +514,8 @@
             }
             let html = '<table><thead><tr><th>Kategori</th><th>Keterangan</th></tr></thead><tbody>';
             data.forEach(item => {
-                const kategori = item['Kategori'] || item['kategori'] || '-';
-                const keterangan = item['Keterangan'] || item['keterangan'] || '-';
+                const kategori = dapatkanNilaiKolom(item, 'kategori') || '-';
+                const keterangan = dapatkanNilaiKolom(item, 'keterangan') || '-';
 
                 html += `
                     <tr>
@@ -529,7 +528,6 @@
             wadah.innerHTML = html;
         }
 
-        // Jalankan otomatis saat web dibuka
         window.addEventListener('DOMContentLoaded', ambilDataSpreadsheet);
     </script>
 </body>
