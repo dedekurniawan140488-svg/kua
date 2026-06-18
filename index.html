@@ -32,10 +32,32 @@
         header {
             background-color: var(--warna-kua);
             color: white;
-            padding: 20px 0;
+            padding: 15px 0;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            
+            /* Ini kunci agar menu tetap menempel di atas saat di-scroll */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000; /* Memastikan menu selalu berada di lapisan paling atas */
         }
-
+    
+        /* --- GAYA TEKS BERJALAN --- */
+        .running-text-container {
+            background-color: var(--warna-aksen); /* Warna kuning aksen KUA */
+            color: var(--warna-kua); /* Teks hijau KUA */
+            padding: 6px 0;
+            font-weight: bold;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            position: fixed;
+            top: 92px; /* Menempel tepat di bawah header layar laptop */
+            left: 0;
+            width: 100%;
+            z-index: 999;
+        }
+    
         .header-container {
             width: 90%;
             max-width: 1200px;
@@ -76,12 +98,12 @@
             background-color: var(--warna-aksen);
             color: var(--warna-kua);
         }
-
+   
         /* --- KONTEN UTAMA --- */
         main {
             width: 90%;
             max-width: 1200px;
-            margin: 30px auto;
+            margin: 160px auto 30px auto; /* Jarak atas disesuaikan untuk laptop */
             min-height: 70vh;
         }
 
@@ -124,12 +146,12 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             border: 1px solid #e0e0e0;
         }
-
         .berita-card img.berita-img {
             width: 100%;
-            max-height: 200px;
-            object-fit: cover;
-            border-bottom: 1px solid #e0e0e0;
+            height: auto;          
+            max-height: 300px;     
+            object-fit: contain;   
+            background-color: #f0f0f0; 
         }
 
         .berita-info {
@@ -178,6 +200,13 @@
             background-color: rgba(15, 81, 50, 0.02);
         }
 
+        table img {
+            width: auto !important;
+            height: 60px !important; 
+            object-fit: contain;     
+            background-color: #fafafa;
+        }
+
         /* --- TOMBOL CETAK --- */
         .btn-cetak {
             background-color: var(--warna-aksen);
@@ -210,7 +239,7 @@
 
         /* --- ATURAN CETAK (PRINT) --- */
         @media print {
-            header, nav, .btn-cetak, footer, .no-print {
+            header, nav, .btn-cetak, footer, .no-print, .running-text-container {
                 display: none !important;
             }
             body {
@@ -258,6 +287,12 @@
                 padding: 6px 12px;
                 font-size: 0.9rem;
             }
+            .running-text-container {
+                top: 135px; /* Menyesuaikan posisi teks berjalan di tablet/HP */
+            }
+            main {
+                margin-top: 240px; /* Jarak longgar agar konten tidak menyatu/tertutup menu atas */
+            }
         }
     </style>
 </head>
@@ -280,6 +315,13 @@
             </nav>
         </div>
     </header>
+
+    <!-- TEKS BERJALAN KALENDER MASEHI & HIJRIAH -->
+    <div class="running-text-container">
+        <marquee behavior="scroll" direction="left" scrollamount="5" id="kalender-berjalan">
+            Memuat kalender digital KUA...
+        </marquee>
+    </div>
 
     <!-- KONTEN UTAMA -->
     <main>
@@ -394,11 +436,30 @@
                 document.getElementById('data-nikah').innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Gagal mengambil data dari Google Sheets.</td></tr>';
             }
         }
-
-        // Bantuan mencari nilai kolom tanpa sensitif huruf besar/kecil dan menghapus spasi luar
+        
+        // Bantuan mencari nilai kolom dan otomatis merapikan format tanggal ISO jika ditemukan
         function dapatkanNilaiKolom(item, kataKunci) {
             const kunciDitemukan = Object.keys(item).find(k => k.toLowerCase().trim() === kataKunci.toLowerCase().trim());
-            return kunciDitemukan ? item[kunciDitemukan] : null;
+            if (!kunciDitemukan) return null;
+            
+            let nilai = item[kunciDitemukan];
+            
+            if (nilai && typeof nilai === 'string' && nilai.includes('T') && nilai.endsWith('Z')) {
+                try {
+                    const objekTanggal = new Date(nilai);
+                    if (!isNaN(objekTanggal)) {
+                        return objekTanggal.toLocaleDateString('id-ID', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                        });
+                    }
+                } catch (e) {
+                    console.error("Gagal mengubah format tanggal:", e);
+                }
+            }
+            
+            return nilai;
         }
 
         // Tampilkan Tab Berita
@@ -416,8 +477,10 @@
                 const judul = dapatkanNilaiKolom(item, 'judul') || 'Info Kegiatan';
                 const deskripsi = dapatkanNilaiKolom(item, 'deskripsi') || '';
                 
-                // Mendeteksi variasi nama kolom foto kegiatan
-                const linkGambar = dapatkanNilaiKolom(item, 'link gambar') || dapatkanNilaiKolom(item, 'link foto kegiatan') || dapatkanNilaiKolom(item, 'foto') || '';
+                const linkGambar = dapatkanNilaiKolom(item, 'link foto') || 
+                                   dapatkanNilaiKolom(item, 'link gambar') || 
+                                   dapatkanNilaiKolom(item, 'foto') || 
+                                   dapatkanNilaiKolom(item, 'gambar');
 
                 html += `
                     <div class="berita-card">
@@ -444,17 +507,13 @@
             data.forEach((item, index) => {
                 const no = dapatkanNilaiKolom(item, 'no') || (index + 1);
                 const suami = dapatkanNilaiKolom(item, 'suami') || '-';
-                
-                // Perbaikan deteksi kolom istri (mencari variasi tulisan istri/isteri)
                 const istri = dapatkanNilaiKolom(item, 'istri') || dapatkanNilaiKolom(item, 'isteri') || '-';
-                
                 const tgl = dapatkanNilaiKolom(item, 'tanggal akad') || dapatkanNilaiKolom(item, 'tanggal') || '-';
                 const jam = dapatkanNilaiKolom(item, 'jam') || dapatkanNilaiKolom(item, 'waktu') || '-';
                 const lokasi = dapatkanNilaiKolom(item, 'lokasi') || dapatkanNilaiKolom(item, 'lokasi akad') || '-';
                 
-                // Mendeteksi variasi nama kolom foto pengantin
-                const fotoSuami = dapatkanNilaiKolom(item, 'link foto suami') || dapatkanNilaiKolom(item, 'foto suami') || '';
-                const fotoIstri = dapatkanNilaiKolom(item, 'link foto istri') || dapatkanNilaiKolom(item, 'link foto isteri') || dapatkanNilaiKolom(item, 'foto istri') || dapatkanNilaiKolom(item, 'foto isteri') || '';
+                const fotoSuami = dapatkanNilaiKolom(item, 'link foto suami') || dapatkanNilaiKolom(item, 'foto suami') || dapatkanNilaiKolom(item, 'link foto') || '';
+                const fotoIstri = dapatkanNilaiKolom(item, 'link foto istri') || dapatkanNilaiKolom(item, 'foto istri') || dapatkanNilaiKolom(item, 'link foto') || '';
 
                 html += `
                     <tr>
@@ -528,7 +587,33 @@
             wadah.innerHTML = html;
         }
 
-        window.addEventListener('DOMContentLoaded', ambilDataSpreadsheet);
+        // Fungsi Otomatis Membuat Kalender Masehi & Hijriah
+        function tampilkanKalenderDigital() {
+            const sekarang = new Date();
+            
+            // 1. Format Masehi
+            const opsiMasehi = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const masehiTeks = sekarang.toLocaleDateString('id-ID', opsiMasehi);
+            
+            // 2. Format Hijriah
+            const opsiHijriah = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formatHijriah = new Intl.DateTimeFormat('id-ID-u-ca-islamic-umalqura', opsiHijriah).format(sekarang);
+            const hijriahTeks = formatHijriah + " H";
+
+            // 3. Teks Gabungan
+            const teksLengkap = `Selamat Datang di KUA Digital Kecamatan Tambusai Utara | Hari Ini: ${masehiTeks} M / ${hijriahTeks} | Jagalah Protokol Kesehatan dan Tertib Administrasi Pernikahan.`;
+            
+            const elemenKalender = document.getElementById('kalender-berjalan');
+            if (elemenKalender) {
+                elemenKalender.innerHTML = teksLengkap;
+            }
+        }
+
+        // Jalankan semua fungsi saat halaman selesai dimuat
+        window.addEventListener('DOMContentLoaded', () => {
+            tampilkanKalenderDigital();
+            ambilDataSpreadsheet();
+        });
     </script>
 </body>
 </html>
