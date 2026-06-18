@@ -28,7 +28,7 @@
             line-height: 1.6;
         }
 
-        /* --- PEMBUNGKUS MENU & RUNNING TEXT UNTUK SOLUSI LAYAR --- */
+        /* --- PEMBUNGKUS MENU & RUNNING TEXT (FIXED DI ATAS) --- */
         .header-fixed-wrapper {
             position: fixed;
             top: 0;
@@ -36,6 +36,8 @@
             width: 100%;
             z-index: 1000;
             box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+            display: flex;
+            flex-direction: column;
         }
 
         header {
@@ -48,11 +50,12 @@
         .running-text-container {
             background-color: var(--warna-aksen); /* Warna kuning aksen KUA */
             color: #0b3d26; /* Hijau tua gelap agar kontras tinggi */
-            padding: 8px 0;
+            padding: 10px 0; /* Dipertebal sedikit agar bar kuning lebih lega */
             font-weight: 800; /* Extra Bold agar sangat ketara */
-            font-size: 1.05rem; /* Ukuran huruf dinaikkan sedikit */
+            font-size: 1.1rem; /* Ukuran huruf mantap */
             letter-spacing: 0.5px;
             border-top: 1px solid rgba(0,0,0,0.08);
+            width: 100%;
         }
 
         #kalender-berjalan {
@@ -100,11 +103,11 @@
             color: var(--warna-kua);
         }
    
-        /* --- KONTEN UTAMA --- */
+        /* --- KONTEN UTAMA (Jarak atas diatur otomatis oleh JS) --- */
         main {
             width: 90%;
             max-width: 1200px;
-            margin: 180px auto 30px auto; /* Jarak aman atas awal */
+            margin: 0 auto 30px auto; 
             min-height: 70vh;
         }
 
@@ -274,7 +277,7 @@
             }
         }
 
-        /* --- PERBAIKAN RESPONSIVE TIMBAL BALIK (TABLET & HP) --- */
+        /* --- PERBAIKAN RESPONSIVE --- */
         @media (max-width: 768px) {
             .logo-kua h1 { font-size: 1.4rem; }
             .logo-kua p { font-size: 0.8rem; }
@@ -292,25 +295,20 @@
                 padding: 5px 12px;
                 font-size: 0.85rem;
             }
-            main {
-                margin-top: 215px; /* Jarak aman portrait agar tidak menempel */
-            }
         }
 
-        /* Aturan Khusus jika HP dalam posisi Miring/Landscape */
         @media (max-height: 500px) and (max-width: 900px) {
             header { padding: 6px 0; }
             .logo-kua p { display: none; }
             .header-container { flex-direction: row; justify-content: space-between; }
-            main {
-                margin-top: 125px; /* Jarak atas otomatis menyusut pas saat posisi landscape */
-            }
         }
     </style>
 </head>
 <body>
 
-    <div class="header-fixed-wrapper">
+    <!-- PEMBUNGKUS ATAS FIXED (MENU + TEKS BERJALAN MENJADI SATU KESATUAN) -->
+    <div class="header-fixed-wrapper" id="pembungkus-atas">
+        <!-- HEADER KUA -->
         <header>
             <div class="header-container">
                 <div class="logo-kua">
@@ -328,6 +326,7 @@
             </div>
         </header>
 
+        <!-- TEKS BERJALAN KALENDER MASEHI & HIJRIAH -->
         <div class="running-text-container">
             <marquee behavior="scroll" direction="left" scrollamount="5" id="kalender-berjalan">
                 Memuat kalender digital KUA...
@@ -335,13 +334,16 @@
         </div>
     </div>
 
-    <main>
+    <!-- KONTEN UTAMA -->
+    <main id="konten-utama">
         
+        <!-- 1. HALAMAN BERANDA -->
         <div id="beranda" class="halaman aktif">
             <div class="seksi">
                 <h2>Berita Kegiatan</h2>
                 <div id="konten-berita" class="grid-berita">
-                    </div>
+                    <!-- Data berita masuk otomatis di sini -->
+                </div>
             </div>
 
             <div class="seksi">
@@ -362,38 +364,52 @@
                             </tr>
                         </thead>
                         <tbody id="data-nikah">
-                            </tbody>
+                            <!-- Data pengumuman masuk otomatis di sini -->
+                        </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
+        <!-- 2. HALAMAN LAYANAN -->
         <div id="layanan" class="halaman">
             <div class="seksi">
                 <h2>Menu Layanan KUA</h2>
                 <p class="no-print" style="margin-bottom: 20px; color:#555;">Berikut adalah daftar jenis pelayanan publik yang tersedia di KUA Tambusai Utara:</p>
                 <div id="konten-layanan">
-                    </div>
+                    <!-- Data layanan masuk otomatis di sini -->
+                </div>
             </div>
         </div>
 
+        <!-- 3. HALAMAN INFORMASI -->
         <div id="informasi" class="halaman">
             <div class="seksi">
                 <h2>Layanan Informasi</h2>
                 <p class="no-print" style="margin-bottom: 20px; color:#555;"></p>
                 <div id="konten-informasi">
-                    </div>
+                    <!-- Data informasi masuk otomatis di sini -->
+                </div>
             </div>
         </div>
 
     </main>
 
+    <!-- FOOTER -->
     <footer>
         <p>&copy; 2026 KUA Digital Hak Cipta Allah SWT</p>
     </footer>
 
+    <!-- INTERAKSI JAVASCRIPT & GOOGLE SHEETS -->
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4XocjTGdF5RYORfDG3yCfkxN5nM4cEvbvpSeos0xlKcvJrBgjgiWsCvxO2zsdy-Jx/exec";
+
+        // Fungsi Baru: Menghitung Jarak Atas Secara Otomatis Akurat
+        function sesuaikanJarakKontenAtas() {
+            const tinggiWrapper = document.getElementById('pembungkus-atas').offsetHeight;
+            // Berikan tambahan jarak 25px dari batas bawah running text agar estetis dan longgar
+            document.getElementById('konten-utama').style.marginTop = (tinggiWrapper + 25) + "px";
+        }
 
         function bukaHalaman(idHalaman) {
             document.querySelectorAll('.halaman').forEach(hal => {
@@ -412,6 +428,8 @@
             if (menuAktif) {
                 menuAktif.classList.add('active');
             }
+            // Jalankan ulang kalkulasi jarak jika halaman berpindah
+            sesuaikanJarakKontenAtas();
         }
 
         async function ambilDataSpreadsheet() {
@@ -431,6 +449,9 @@
                 prosesPengumumkan(database['pengumuman']);
                 prosesLayanan(database['layanan']);
                 prosesInformasi(database['informasi']);
+                
+                // Kalkulasi ulang setelah data eksternal sukses dirender
+                setTimeout(sesuaikanJarakKontenAtas, 100);
 
             } catch (error) {
                 console.error("Gagal terhubung ke spreadsheet:", error);
@@ -625,10 +646,14 @@
             }
         }
 
+        // Jalankan kalkulasi otomatis saat pertama kali dibuka & saat layar diputar/di-resize
         window.addEventListener('DOMContentLoaded', () => {
             tampilkanKalenderDigital();
             ambilDataSpreadsheet();
+            sesuaikanJarakKontenAtas();
         });
+        
+        window.addEventListener('resize', sesuaikanJarakKontenAtas);
     </script>
 </body>
 </html>
