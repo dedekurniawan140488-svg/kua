@@ -308,23 +308,24 @@
             }
         }
 
-        /* --- SCRIPT RESPONSIVE BARU (MENYESUAIKAN FONT, BUKAN MENGHAPUS TEKS) --- */
-        /* --- ATURAN RESPONSIVE BARU (MENU SELALU BERJEJER KE SAMPING) --- */
+        /* --- ATURAN RESPONSIVE (LOGO & TEKS KUA DI KIRI, MENU TETAP DI TENGAH) --- */
         @media (max-width: 992px) {
             header {
                 padding: 10px 0;
             }
             .header-container {
-                flex-direction: column; /* Logo dan Menu tetap dipisah atas-bawah agar lega */
+                flex-direction: column; /* Logo di atas, menu di bawah agar lega */
                 gap: 12px;
-                text-align: center;
+                align-items: flex-start; /* Membawa baris pembungkus ke kiri */
+                text-align: left; /* TEKS KUA RATA KIRI */
             }
             .wrapper-judul-logo {
                 flex-direction: row;
-                justify-content: center;
+                justify-content: flex-start; /* LOGO & TEKS KUA TETAP DI KIRI */
+                width: 100%;
             }
             .img-logo-kemenag {
-                height: 45px; /* Logo mengecil sedikit di HP portrait */
+                height: 45px; 
             }
             .logo-kua h1 { 
                 font-size: 1.5rem; 
@@ -336,10 +337,13 @@
                 font-size: 0.75rem;
             }
 
-            /* MENU TETAP KESAMPING: Baik portrait maupun landscape */
+            /* MENU TETAP KESAMPING & TETAP DI TENGAH (CENTER) */
+            nav {
+                width: 100%; /* Memastikan nav memenuhi lebar layar agar bisa ditengah */
+            }
             nav ul {
-                flex-direction: row; /* Dikunci agar selalu berjajar ke samping */
-                justify-content: center;
+                flex-direction: row; 
+                justify-content: center; /* KUNCI: MENU DIKEMBALIKAN TETAP DI TENGAH */
                 gap: 10px;
                 width: 100%;
             }
@@ -348,6 +352,8 @@
                 font-size: 0.85rem;
             }
         }
+
+            
 
         /* KHUSUS LANDSCAPE: Mengoptimalkan ruang kiri-kanan agar lebih hemat tempat saat layar miring */
         @media (max-height: 600px) and (max-width: 1024px) {
