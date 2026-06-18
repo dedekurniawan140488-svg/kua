@@ -353,17 +353,20 @@
         @media (max-height: 600px) and (max-width: 1024px) {
             header { 
                 padding: 6px 0; 
-            }
-            .header-container { 
-                flex-direction: row; /* Logo di kiri, menu di kanan saat posisi miring */
-                justify-content: space-between; 
-            }
-            nav ul { 
-                justify-content: flex-end;
-                gap: 8px; 
-            }
         }
-
+        .header-container { 
+            flex-direction: row; /* Logo di kiri, menu di kanan saat posisi miring */
+            justify-content: space-between; 
+            text-align: left; /* MEMAKSA TEKS KEMBALI RATA KIRI SAAT HP MIRING */
+        }
+        .wrapper-judul-logo {
+            justify-content: flex-start; /* MEMAKSA LOGO & TEKS BERADA DI KIRI */
+        }
+        nav ul { 
+            justify-content: flex-end;
+            gap: 8px; 
+        }
+    }
 
         /* KHUSUS LANDSCAPE: Jika layar miring/pendek, menu otomatis dikembalikan berjajar ke samping */
         @media (max-height: 600px) and (max-width: 1024px) {
