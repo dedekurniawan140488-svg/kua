@@ -43,20 +43,25 @@
             z-index: 1000; /* Memastikan menu selalu berada di lapisan paling atas */
         }
     
-        /* --- GAYA TEKS BERJALAN --- */
+        /* --- GAYA TEKS BERJALAN (LEBIH TEGAS & KONTRAS) --- */
         .running-text-container {
-            background-color: var(--warna-aksen); /* Warna kuning aksen KUA */
-            color: var(--warna-kua); /* Teks hijau KUA */
-            padding: 6px 0;
-            font-weight: bold;
-            font-size: 0.95rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            background-color: #ffc107; /* Warna kuning emas asli KUA */
+            color: #0b3d26; /* Hijau KUA yang digelapkan sedikit agar ekstra kontras */
+            padding: 8px 0; /* Dipertebal sedikit atas-bawahnya */
+            font-weight: 800; /* Menggunakan Extra Bold agar teks sangat tegas */
+            font-size: 1.05rem; /* Ukuran huruf dinaikkan sedikit agar jelas */
+            letter-spacing: 0.5px; /* Memberi jarak antar huruf agar tidak dempet */
+            box-shadow: 0 3px 6px rgba(0,0,0,0.12); /* Bayangan dipertegas */
             position: fixed;
-            top: 150px; /* Diturunkan sedikit dari 92px agar tidak tertutup header laptop */
+            top: 150px; 
             left: 0;
             width: 100%;
             z-index: 999;
-        
+        }
+
+        /* Tambahan agar teks di dalam marquee memiliki efek penegas */
+        #kalender-berjalan {
+            text-shadow: 0.2px 0.2px 0px rgba(255, 255, 255, 0.5); /* Efek teks timbul halus */
         }
     
         .header-container {
