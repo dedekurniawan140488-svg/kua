@@ -110,7 +110,7 @@
             color: #e0e0e0;
             font-weight: normal;
             margin-top: -1px;
-            line-hight: 1.2;
+            line-height: 1.2;
         }
 
         nav ul {
@@ -309,20 +309,20 @@
             }
         }
 
-        /* --- ATURAN RESPONSIVE (LOGO & TEKS KUA DI KIRI, MENU TETAP DI TENGAH) --- */
+        /* --- ATURAN RESPONSIVE --- */
         @media (max-width: 992px) {
             header {
                 padding: 10px 0;
             }
             .header-container {
-                flex-direction: column; /* Logo di atas, menu di bawah agar lega */
+                flex-direction: column; 
                 gap: 12px;
-                align-items: flex-start; /* Membawa baris pembungkus ke kiri */
-                text-align: left; /* TEKS KUA RATA KIRI */
+                align-items: flex-start; 
+                text-align: left; 
             }
             .wrapper-judul-logo {
                 flex-direction: row;
-                justify-content: flex-start; /* LOGO & TEKS KUA TETAP DI KIRI */
+                justify-content: flex-start; 
                 width: 100%;
             }
             .img-logo-kemenag {
@@ -338,13 +338,12 @@
                 font-size: 0.75rem;
             }
 
-            /* MENU TETAP KESAMPING & TETAP DI TENGAH (CENTER) */
             nav {
-                width: 100%; /* Memastikan nav memenuhi lebar layar agar bisa ditengah */
+                width: 100%; 
             }
             nav ul {
                 flex-direction: row; 
-                justify-content: center; /* KUNCI: MENU DIKEMBALIKAN TETAP DI TENGAH */
+                justify-content: center; 
                 gap: 10px;
                 width: 100%;
             }
@@ -354,31 +353,28 @@
             }
         }
 
-        /* KHUSUS LANDSCAPE: Mengoptimalkan ruang kiri-kanan agar lebih hemat tempat saat layar miring */
         @media (max-height: 600px) and (max-width: 1024px) {
             header { 
-                padding: 8px 0; /* Ditambah sedikit dari 6px agar ada ruang vertikal yang pas */
+                padding: 8px 0; 
             }
             .header-container { 
-                flex-direction: row; /* Logo di kiri, menu di kanan saat posisi miring */
+                flex-direction: row; 
                 justify-content: space-between; 
-                align-items: center; /* KUNCI UTAMA: Memaksa menu & logo sejajar lurus secara vertikal (center) */
+                align-items: center; 
                 text-align: left; 
             }
             .wrapper-judul-logo {
                 justify-content: flex-start; 
-                align-items: center; /* Memastikan logo & teks KUA di dalam wrapper juga sejajar vertikal */
+                align-items: center; 
             }
             nav ul { 
                 flex-direction: row;
                 justify-content: flex-end;
-                align-items: center; /* Memastikan teks menu (Beranda, dll) lurus di tengah-tengah tinggi header */
+                align-items: center; 
                 gap: 8px; 
             }
         }
             
-
-        /* KHUSUS LANDSCAPE: Jika layar miring/pendek, menu otomatis dikembalikan berjajar ke samping */
         @media (max-height: 600px) and (max-width: 1024px) {
             header { 
                 padding: 6px 0; 
@@ -388,7 +384,7 @@
                 justify-content: space-between; 
             }
             nav ul { 
-                flex-direction: row; /* Menu kembali ke samping */
+                flex-direction: row; 
                 gap: 10px; 
             }
             nav ul li a { 
@@ -396,7 +392,6 @@
                 font-size: 0.85rem; 
             }
         }
-
     </style>
 </head>
 <body>
@@ -404,9 +399,10 @@
     <div class="header-fixed-wrapper" id="pembungkus-atas">
         <header>
             <div class="header-container">
-                <!-- PEMBUNGKUS BARU: Untuk menyatukan gambar logo Kemenag & teks KUA -->
                 <div class="wrapper-judul-logo">
-                    <div id="wadah-logo-kemenag"></div>
+                    <!-- LOGO LANGSUNG DIPANGGIL DI HTML (TIDAK LEWAT SPREADSHEET LAGI) -->
+                    <img src="https://raw.githubusercontent.com/dedekurniawan140488-svg/kua/refs/heads/main/logo-kemenag-png-1png.png" class="img-logo-kemenag" alt="Logo Kemenag">
+                    
                     <div class="logo-kua">
                         <h1>KUA DIGITAL</h1>
                         <p>Kantor Urusan Agama Tambusai Utara</p>
@@ -435,8 +431,7 @@
         <div id="beranda" class="halaman aktif">
             <div class="seksi">
                 <h2>Berita Kegiatan</h2>
-                <div id="konten-berita" class="grid-berita">
-                    </div>
+                <div id="konten-berita" class="grid-berita"></div>
             </div>
 
             <div class="seksi">
@@ -453,11 +448,9 @@
                                 <th>Lokasi Akad</th>
                             </tr>
                         </thead>
-                        <tbody id="data-nikah">
-                        </tbody>
+                        <tbody id="data-nikah"></tbody>
                     </table>
                 </div>
-                <!-- KODE YANG SUDAH DIPERBAIKI -->
                 <button class="btn-cetak" onclick="window.print()" style="margin-top: 20px; margin-bottom: 5px;">
                     🖨️ Cetak Daftar / Simpan PDF
                 </button>
@@ -468,17 +461,14 @@
             <div class="seksi">
                 <h2>Menu Layanan KUA</h2>
                 <p class="no-print" style="margin-bottom: 20px; color:#555;">Berikut adalah daftar jenis pelayanan publik yang tersedia di KUA Tambusai Utara:</p>
-                <div id="konten-layanan">
-                    </div>
+                <div id="konten-layanan"></div>
             </div>
         </div>
 
         <div id="informasi" class="halaman">
             <div class="seksi">
                 <h2>Layanan Informasi</h2>
-                <p class="no-print" style="margin-bottom: 20px; color:#555;"></p>
-                <div id="konten-informasi">
-                    </div>
+                <div id="konten-informasi"></div>
             </div>
         </div>
 
@@ -529,28 +519,14 @@
                 const respon = await fetch(SCRIPT_URL);
                 const database = await respon.json();
 
-                // ----- FUNGSI BARU: Mengambil & Menampilkan Logo Kemenag dari Tab Identitas -----
-                if (database['identitas'] && database['identitas'].length > 0) {
-                    const dataLogo = database['identitas'].find(item => {
-                        const namaElemen = dapatkanNilaiKolom(item, 'nama');
-                        return namaElemen && namaElemen.toLowerCase().includes('logo kemenag');
-                    });
-                    if (dataLogo) {
-                        const linkLogo = dapatkanNilaiKolom(dataLogo, 'link');
-                        if (linkLogo) {
-                            document.getElementById('wadah-logo-kemenag').innerHTML = `
-                                <img src="${linkLogo.toString().trim()}" class="img-logo-kemenag" alt="Logo Kemenag">
-                            `;
-                        }
-                    }
-                }
+                // FUNGSI FETCH LOGO KEMENAG DARI SPREADSHEET DI SINI SUDAH DIHAPUS
 
                 prosesBerita(database['berita'] || database['beranda']);
                 prosesPengumumkan(database['pengumuman']);
                 prosesLayanan(database['layanan']);
                 prosesInformasi(database['informasi']);
                 
-                setTimeout(sesuaikanJarakKontenAtas, 300); // Sedikit ditambah agar tinggi logo terhitung sempurna
+                setTimeout(sesuaikanJarakKontenAtas, 300);
 
             } catch (error) {
                 console.error("Gagal terhubung ke spreadsheet:", error);
@@ -708,7 +684,7 @@
             const sekarang = new Date();
             
             const opsiMasehi = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const masehiTeks = machinedDate = sekarang.toLocaleDateString('id-ID', opsiMasehi);
+            const masehiTeks = sekarang.toLocaleDateString('id-ID', opsiMasehi);
             
             let jd = Math.floor(sekarang.getTime() / 86400000) + 2440587.5;
             let l = Math.floor(jd - 1948440 + 10632);
