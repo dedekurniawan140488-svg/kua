@@ -165,6 +165,7 @@
             border-bottom: 3px solid var(--warna-aksen);
             padding-bottom: 8px;
             display: inline-block;
+            font-size: 1.4rem; /* <-- TAMBAHKAN INI (Bisa diganti ukurannya sesuai selera) */
         }
 
         /* --- TAMPILAN BERITA (CARD) --- */
@@ -686,7 +687,7 @@
     // Ubah angka ini jika tanggal Hijriah tidak pas dengan Kemenag:
     // +1 untuk mempercepat 1 hari, +2 untuk 2 hari.
     // -1 untuk memperlambat 1 hari, -2 untuk 2 hari.
-    const koreksiHari = +2; 
+    const koreksiHari = +3; 
     
     const opsiMasehi = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const masehiTeks = sekarang.toLocaleDateString('id-ID', opsiMasehi);
@@ -724,7 +725,7 @@
     }
     
     const hijriahTeks = `${tglHijriah} ${blnHijriah} ${thnHijriah} H`;
-    const teksLengkap = `Selamat Datang di KUA Digital Kecamatan Tambusai Utara | Hari Ini: ${masehiTeks} M / ${hijriahTeks} | Jagalah Protokol Kesehatan dan Tertib Administrasi Pernikahan.`;
+    const teksLengkap = `Selamat Datang di KUA Digital, Kantor Urusan Agama Tambusai Utara | Hari Ini: ${masehiTeks} M / ${hijriahTeks} `;
     
     const elemenKalender = document.getElementById('kalender-berjalan');
     if (elemenKalender) {
