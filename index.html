@@ -461,6 +461,7 @@
                         <li><a onclick="bukaHalaman('beranda')" class="active">Beranda</a></li>
                         <li><a onclick="bukaHalaman('layanan')">Layanan</a></li>
                         <li><a onclick="bukaHalaman('informasi')">Informasi</a></li>
+                        <li><a onclick="bukaHalaman('profil')">Profil</a></li>
                     </ul>
                 </nav>
             </div>
@@ -522,7 +523,21 @@
                 <div id="konten-informasi"></div>
             </div>
         </div>
-
+  
+        <!-- HALAMAN PROFIL BARU -->
+<div id="profil" class="halaman">
+    <div class="seksi">
+        <h2>Profil Kantor & Struktur Organisasi</h2>
+        <p style="margin-bottom: 25px; color:#555;">Struktur Organisasi dan Personil Kantor Urusan Agama Tambusai Utara:</p>
+        
+        <!-- Tempat untuk menampilkan Kepala KUA (Ukuran Lebih Besar/Utama) -->
+        <div id="kepala-kua-area" style="margin-bottom: 40px;"></div>
+        
+        <!-- Tempat untuk menampilkan Staf/Pegawai (Model Grid Berjejer) -->
+        <div id="pegawai-grid-area" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;"></div>
+    </div>
+</div>
+        
     </main>
 
     <footer>
