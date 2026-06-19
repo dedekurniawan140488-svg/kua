@@ -242,6 +242,46 @@
             background-color: var(--warna-kua);
         }
 
+        /* --- GAYA HALAMAN PROFIL PEGAWAI --- */
+        .kartu-pegawai {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .kartu-pegawai:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+        }
+        .avatar-pegawai {
+            width: 120px;
+            height: 160px; /* Rasio pas foto formal 3:4 */
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 3px solid var(--warna-bg);
+            background-color: #f7fafc;
+        }
+        .nama-pegawai {
+            font-weight: 700;
+            color: var(--warna-kua);
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+        .jabatan-pegawai {
+            font-size: 0.85rem;
+            color: #718096;
+            font-weight: 500;
+        }
+        .kartu-kepala {
+            max-width: 280px;
+            margin: 0 auto;
+            border-top: 4px solid var(--warna-aksen);
+        }
+
         /* --- TAMPILAN TABEL --- */
         .table-container {
             width: 100%;
@@ -421,24 +461,6 @@
                 gap: 8px; 
             }
         }
-            
-        @media (max-height: 600px) and (max-width: 1024px) {
-            header { 
-                padding: 6px 0; 
-            }
-            .header-container { 
-                flex-direction: row; 
-                justify-content: space-between; 
-            }
-            nav ul { 
-                flex-direction: row; 
-                gap: 10px; 
-            }
-            nav ul li a { 
-                padding: 6px 12px; 
-                font-size: 0.85rem; 
-            }
-        }
     </style>
 </head>
 <body>
@@ -447,7 +469,6 @@
         <header>
             <div class="header-container">
                 <div class="wrapper-judul-logo">
-                    <!-- LOGO LANGSUNG DIPANGGIL DI HTML (TIDAK LEWAT SPREADSHEET LAGI) -->
                     <img src="https://raw.githubusercontent.com/dedekurniawan140488-svg/kua/refs/heads/main/logo-kemenag-png-1png.png" class="img-logo-kemenag" alt="Logo Kemenag">
                     
                     <div class="logo-kua">
@@ -459,9 +480,9 @@
                 <nav>
                     <ul>
                         <li><a onclick="bukaHalaman('beranda')" class="active">Beranda</a></li>
+                        <li><a onclick="bukaHalaman('profil')">Profil</a></li>
                         <li><a onclick="bukaHalaman('layanan')">Layanan</a></li>
                         <li><a onclick="bukaHalaman('informasi')">Informasi</a></li>
-                        <li><a onclick="bukaHalaman('profil')">Profil</a></li>
                     </ul>
                 </nav>
             </div>
@@ -476,10 +497,10 @@
 
     <main id="konten-utama">
         
+        <!-- HALAMAN BERANDA -->
         <div id="beranda" class="halaman aktif">
             <div class="seksi">
                 <h2>Ruang Kabar</h2>
-                <!-- STRUKTUR SLIDER BERITA BARU -->
                 <div class="slider-container">
                     <div id="konten-berita" class="slider-wrapper"></div>
                     <div id="slider-indicators" class="slider-indicators"></div>
@@ -509,6 +530,18 @@
             </div>
         </div>
 
+        <!-- HALAMAN PROFIL BARU -->
+        <div id="profil" class="halaman">
+            <div class="seksi">
+                <h2>Profil Kantor & Struktur Organisasi</h2>
+                <p style="margin-bottom: 25px; color:#555;">Struktur Organisasi dan Personil Kantor Urusan Agama Kecamatan Tambusai Utara:</p>
+                
+                <div id="kepala-kua-area" style="margin-bottom: 40px;"></div>
+                <div id="pegawai-grid-area" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;"></div>
+            </div>
+        </div>
+
+        <!-- HALAMAN LAYANAN -->
         <div id="layanan" class="halaman">
             <div class="seksi">
                 <h2>Menu Layanan</h2>
@@ -517,27 +550,14 @@
             </div>
         </div>
 
+        <!-- HALAMAN INFORMASI -->
         <div id="informasi" class="halaman">
             <div class="seksi">
                 <h2>Layanan Informasi</h2>
                 <div id="konten-informasi"></div>
             </div>
         </div>
-  
-        <!-- HALAMAN PROFIL BARU -->
-<div id="profil" class="halaman">
-    <div class="seksi">
-        <h2>Profil Kantor & Struktur Organisasi</h2>
-        <p style="margin-bottom: 25px; color:#555;">Struktur Organisasi dan Personil Kantor Urusan Agama Tambusai Utara:</p>
-        
-        <!-- Tempat untuk menampilkan Kepala KUA (Ukuran Lebih Besar/Utama) -->
-        <div id="kepala-kua-area" style="margin-bottom: 40px;"></div>
-        
-        <!-- Tempat untuk menampilkan Staf/Pegawai (Model Grid Berjejer) -->
-        <div id="pegawai-grid-area" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;"></div>
-    </div>
-</div>
-        
+
     </main>
 
     <footer>
@@ -547,7 +567,6 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4XocjTGdF5RYORfDG3yCfkxN5nM4cEvbvpSeos0xlKcvJrBgjgiWsCvxO2zsdy-Jx/exec";
         
-        // Variabel penunjang Slider otomatis
         let slideIndexSekarang = 0;
         let totalSlide = 0;
         let intervalSlider;
@@ -576,32 +595,31 @@
             }
             sesuaikanJarakKontenAtas();
         }
+
         async function ambilDataSpreadsheet() {
-        // Menghapus baris pemuatan teks agar layar tidak berkedip setiap 5 menit
-         try {
-        // --- PROSES CACHE BUSTING ---
-        // Menambahkan kode unik (?_=[waktu_sekarang]) di ujung URL agar data selalu fresh asli dari Sheets
-        const urlAntiCache = SCRIPT_URL + (SCRIPT_URL.includes('?') ? '&' : '?') + '_=' + new Date().getTime();
-        
-        const respon = await fetch(urlAntiCache);
-        const database = await respon.json();
+            try {
+                // Trik hancurkan cache agar data berita/pegawai baru langsung masuk
+                const urlAntiCache = SCRIPT_URL + (SCRIPT_URL.includes('?') ? '&' : '?') + '_=' + new Date().getTime();
+                
+                const respon = await fetch(urlAntiCache);
+                const database = await respon.json();
 
-        prosesBerita(database['berita'] || database['beranda']);
-        prosesPengumumkan(database['pengumuman']);
-        prosesLayanan(database['layanan']);
-        prosesInformasi(database['informasi']);
-        
-        setTimeout(sesuaikanJarakKontenAtas, 300);
+                prosesBerita(database['berita'] || database['beranda']);
+                prosesPengumumkan(database['pengumuman']);
+                prosesLayanan(database['layanan']);
+                prosesInformasi(database['informasi']);
+                prosesProfil(database['profil']); 
+                
+                setTimeout(sesuaikanJarakKontenAtas, 300);
 
-    } catch (error) {
-        console.error("Gagal terhubung ke spreadsheet:", error);
-        // Teks gagal hanya muncul jika ini adalah pemuatan pertama kali dan eror
-        if(!document.getElementById('konten-berita').innerHTML.includes('berita-card')) {
-            document.getElementById('konten-berita').innerHTML = '<p style="padding:20px; color:red;">Gagal memuat berita. Periksa koneksi internet.</p>';
+            } catch (error) {
+                console.error("Gagal terhubung ke spreadsheet:", error);
+                if(!document.getElementById('konten-berita').innerHTML.includes('berita-card')) {
+                    document.getElementById('konten-berita').innerHTML = '<p style="padding:20px; color:red;">Gagal memuat berita. Periksa koneksi internet.</p>';
+                }
+            }
         }
-    }
-}
-
+        
         function dapatkanNilaiKolom(item, kataKunci) {
             const kunciDitemukan = Object.keys(item).find(k => k.toLowerCase().trim() === kataKunci.toLowerCase().trim());
             if (!kunciDitemukan) return null;
@@ -622,11 +640,9 @@
                     console.error("Gagal mengubah format tanggal:", e);
                 }
             }
-            
             return nilai;
         }
 
-        // FUNGSI PROSES BERITA BARU DENGAN LOGIKA SLIDER & INDIKATOR GARIS
         function prosesBerita(data) {
             const wadah = document.getElementById('konten-berita');
             const wadahIndikator = document.getElementById('slider-indicators');
@@ -646,17 +662,13 @@
                 const tanggal = dapatkanNilaiKolom(item, 'tanggal') || '-';
                 const judul = dapatkanNilaiKolom(item, 'judul') || 'Info Kegiatan';
                 const deskripsi = dapatkanNilaiKolom(item, 'deskripsi') || '';
-                
-                const linkGambar = dapatkanNilaiKolom(item, 'link foto') || 
-                                   dapatkanNilaiKolom(item, 'link gambar') || 
-                                   dapatkanNilaiKolom(item, 'foto') || 
-                                   dapatkanNilaiKolom(item, 'gambar');
+                const linkGambar = dapatkanNilaiKolom(item, 'link foto') || dapatkanNilaiKolom(item, 'link gambar') || dapatkanNilaiKolom(item, 'foto') || dapatkanNilaiKolom(item, 'gambar');
 
                 htmlCard += `
                     <div class="berita-card">
                         ${linkGambar ? `<img src="${linkGambar.toString().trim()}" alt="Foto" class="berita-img" onerror="this.src='https://placehold.co/600x400?text=KUA+Tambusai+Utara';">` : ''}
                         <div class="berita-info">
-                            <p class="berita-tanggal">${tanggal}</p>
+                            <p class="berita-tanggal">📅 ${tanggal}</p>
                             <h3>${judul}</h3>
                             <p>${deskripsi}</p>
                         </div>
@@ -680,7 +692,7 @@
             intervalSlider = setInterval(() => {
                 slideIndexSekarang = (slideIndexSekarang + 1) % totalSlide;
                 updatePosisiSlider();
-            }, 5000); // Geser otomatis setiap 5 detik
+            }, 5000);
         }
 
         function updatePosisiSlider() {
@@ -702,6 +714,56 @@
             slideIndexSekarang = index;
             updatePosisiSlider();
             jalankanSliderOtomatis(); 
+        }
+
+        function prosesProfil(data) {
+            const areaKepala = document.getElementById('kepala-kua-area');
+            const areaPegawai = document.getElementById('pegawai-grid-area');
+            
+            if (!areaKepala || !areaPegawai) return;
+            if (!data || data.length === 0) {
+                areaKepala.innerHTML = '<p>Data profil pegawai belum tersedia di tab [profil] spreadsheet.</p>';
+                areaPegawai.innerHTML = '';
+                return;
+            }
+
+            const dataUrut = [...data].sort((a, b) => {
+                let urutA = parseInt(dapatkanNilaiKolom(a, 'urutan')) || 99;
+                let urutB = parseInt(dapatkanNilaiKolom(b, 'urutan')) || 99;
+                return urutA - urutB;
+            });
+
+            let htmlKepala = '';
+            let htmlPegawai = '';
+
+            dataUrut.forEach((item) => {
+                const nama = dapatkanNilaiKolom(item, 'nama') || '-';
+                const jabatan = dapatkanNilaiKolom(item, 'jabatan') || 'Pegawai';
+                const urutan = parseInt(dapatkanNilaiKolom(item, 'urutan')) || 99;
+                const linkFoto = dapatkanNilaiKolom(item, 'foto') || dapatkanNilaiKolom(item, 'link foto') || dapatkanNilaiKolom(item, 'gambar');
+                const fotoFinal = linkFoto ? linkFoto.toString().trim() : 'https://placehold.co/300x400?text=Foto+KUA';
+
+                if (urutan === 1) {
+                    htmlKepala = `
+                        <div class="kartu-pegawai kartu-kepala">
+                            <img src="${fotoFinal}" alt="${nama}" class="avatar-pegawai" onerror="this.src='https://placehold.co/300x400?text=Foto+Pegawai';">
+                            <div class="nama-pegawai">${nama}</div>
+                            <div class="jabatan-pegawai">${jabatan.toUpperCase()}</div>
+                        </div>
+                    `;
+                } else {
+                    htmlPegawai += `
+                        <div class="kartu-pegawai">
+                            <img src="${fotoFinal}" alt="${nama}" class="avatar-pegawai" onerror="this.src='https://placehold.co/300x400?text=Foto+Pegawai';">
+                            <div class="nama-pegawai">${nama}</div>
+                            <div class="jabatan-pegawai">${jabatan}</div>
+                        </div>
+                    `;
+                }
+            });
+
+            areaKepala.innerHTML = htmlKepala;
+            areaPegawai.innerHTML = htmlPegawai || '<p style="grid-column: 1/-1; text-align:center; color:#777;">Belum ada data staf tambahan.</p>';
         }
 
         function prosesPengumumkan(data) {
@@ -836,14 +898,15 @@
                 elemenKalender.innerHTML = teksLengkap;
             }
         }
-            window.addEventListener('DOMContentLoaded', () => {
-                tampilkanKalenderDigital();
-                ambilDataSpreadsheet();
-                sesuaikanJarakKontenAtas();
 
-                // Jalankan pengambilan data otomatis dari spreadsheet setiap 5 menit
-                setInterval(ambilDataSpreadsheet, 5 * 60 * 1000); 
-            });
+        window.addEventListener('DOMContentLoaded', () => {
+            tampilkanKalenderDigital();
+            ambilDataSpreadsheet();
+            sesuaikanJarakKontenAtas();
+
+            // Jalankan pengambilan data otomatis dari spreadsheet setiap 5 menit
+            setInterval(ambilDataSpreadsheet, 5 * 60 * 1000); 
+        });
         
         window.addEventListener('resize', sesuaikanJarakKontenAtas);
     </script>
