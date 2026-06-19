@@ -561,34 +561,32 @@
             }
             sesuaikanJarakKontenAtas();
         }
-
         async function ambilDataSpreadsheet() {
-            document.getElementById('konten-berita').innerHTML = '<p style="padding:20px;">Sedang memuat berita kegiatan...</p>';
-            document.getElementById('data-nikah').innerHTML = '<tr><td colspan="6" style="text-align:center;">Memuat tabel pengumuman...</td></tr>';
-            
-            const areaLayanan = document.getElementById('konten-layanan');
-            const areaInformasi = document.getElementById('konten-informasi');
-            if (areaLayanan) areaLayanan.innerHTML = '<p>Memuat daftar layanan...</p>';
-            if (areaInformasi) areaInformasi.innerHTML = '<p>Memuat info persyaratan...</p>';
-
-            try {
-                const respon = await fetch(SCRIPT_URL);
-                const database = await respon.json();
-
-                prosesBerita(database['berita'] || database['beranda']);
-                prosesPengumumkan(database['pengumuman']);
-                prosesLayanan(database['layanan']);
-                prosesInformasi(database['informasi']);
-                
-                setTimeout(sesuaikanJarakKontenAtas, 300);
-
-            } catch (error) {
-                console.error("Gagal terhubung ke spreadsheet:", error);
-                document.getElementById('konten-berita').innerHTML = '<p style="padding:20px; color:red;">Gagal memuat berita. Periksa koneksi internet.</p>';
-                document.getElementById('data-nikah').innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Gagal mengambil data dari Google Sheets.</td></tr>';
-            }
-        }
+        // Menghapus baris pemuatan teks agar layar tidak berkedip setiap 5 menit
+         try {
+        // --- PROSES CACHE BUSTING ---
+        // Menambahkan kode unik (?_=[waktu_sekarang]) di ujung URL agar data selalu fresh asli dari Sheets
+        const urlAntiCache = SCRIPT_URL + (SCRIPT_URL.includes('?') ? '&' : '?') + '_=' + new Date().getTime();
         
+        const respon = await fetch(urlAntiCache);
+        const database = await respon.json();
+
+        prosesBerita(database['berita'] || database['beranda']);
+        prosesPengumumkan(database['pengumuman']);
+        prosesLayanan(database['layanan']);
+        prosesInformasi(database['informasi']);
+        
+        setTimeout(sesuaikanJarakKontenAtas, 300);
+
+    } catch (error) {
+        console.error("Gagal terhubung ke spreadsheet:", error);
+        // Teks gagal hanya muncul jika ini adalah pemuatan pertama kali dan eror
+        if(!document.getElementById('konten-berita').innerHTML.includes('berita-card')) {
+            document.getElementById('konten-berita').innerHTML = '<p style="padding:20px; color:red;">Gagal memuat berita. Periksa koneksi internet.</p>';
+        }
+    }
+}
+
         function dapatkanNilaiKolom(item, kataKunci) {
             const kunciDitemukan = Object.keys(item).find(k => k.toLowerCase().trim() === kataKunci.toLowerCase().trim());
             if (!kunciDitemukan) return null;
