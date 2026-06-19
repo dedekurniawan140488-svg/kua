@@ -823,12 +823,14 @@
                 elemenKalender.innerHTML = teksLengkap;
             }
         }
+            window.addEventListener('DOMContentLoaded', () => {
+                tampilkanKalenderDigital();
+                ambilDataSpreadsheet();
+                sesuaikanJarakKontenAtas();
 
-        window.addEventListener('DOMContentLoaded', () => {
-            tampilkanKalenderDigital();
-            ambilDataSpreadsheet();
-            sesuaikanJarakKontenAtas();
-        });
+                // Jalankan pengambilan data otomatis dari spreadsheet setiap 5 menit
+                setInterval(ambilDataSpreadsheet, 5 * 60 * 1000); 
+            });
         
         window.addEventListener('resize', sesuaikanJarakKontenAtas);
     </script>
