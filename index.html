@@ -807,30 +807,47 @@
             });
             wadah.innerHTML = html;
         }
+    function prosesLayanan(data) {
+    const wadah = document.getElementById('konten-layanan');
+    if (!wadah) return;
+    if (!data || data.length === 0) {
+        wadah.innerHTML = '<p>Daftar layanan kosong.</p>';
+        return;
+    }
+    let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">';
+    data.forEach(item => {
+        const nama = dapatkanNilaiKolom(item, 'nama layanan') || 'Layanan';
+        const detailRaw = dapatkanNilaiKolom(item, 'penjelasan') || 
+                          dapatkanNilaiKolom(item, 'keterangan') || 
+                          dapatkanNilaiKolom(item, 'deskripsi') || '';
 
-        function prosesLayanan(data) {
-            const wadah = document.getElementById('konten-layanan');
-            if (!wadah) return;
-            if (!data || data.length === 0) {
-                wadah.innerHTML = '<p>Daftar layanan kosong.</p>';
-                return;
-            }
-            let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">';
-            data.forEach(item => {
-                const nama = dapatkanNilaiKolom(item, 'nama layanan') || 'Layanan';
-                const detail = dapatkanNilaiKolom(item, 'penjelasan') || '-';
+        let detailHTML = '-';
 
-                html += `
-                    <div style="background:#f9f9f9; padding:20px; border-radius:6px; border-left:4px solid var(--warna-kua);">
-                        <h3 style="color:var(--warna-kua); margin-bottom:8px;">${nama}</h3>
-                        <p style="font-size:0.95rem; color:#444;">${detail}</p>
-                    </div>
-                `;
+        if (detailRaw) {
+            // Memecah teks berdasarkan Enter baru atau berdasarkan tanda titik koma (;)
+            const poinPoin = detailRaw.toString().split(/\n|;/);
+            
+            // Bersihkan spasi kosong dan buat baris angka (<ol>)
+            detailHTML = '<ol style="padding-left: 20px; margin-top: 5px;">';
+            poinPoin.forEach(poin => {
+                if (poin.trim() !== '') {
+                    detailHTML += `<li style="margin-bottom: 5px;">${poin.trim()}</li>`;
+                }
             });
-            html += '</div>';
-            wadah.innerHTML = html;
+            detailHTML += '</ol>';
         }
 
+        html += `
+            <div style="background:#f9f9f9; padding:20px; border-radius:6px; border-left:4px solid var(--warna-kua); height: 100%;">
+                <h3 style="color:var(--warna-kua); margin-bottom:8px;">${nama}</h3>
+                <div style="font-size:0.95rem; color:#444; line-height: 1.5;">${detailHTML}</div>
+            </div>
+        `;
+    });
+    html += '</div>';
+    wadah.innerHTML = html;
+}
+        
         function prosesInformasi(data) {
             const wadah = document.getElementById('konten-informasi');
             if (!wadah) return;
