@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KUA Digital Kecamatan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* --- VARIABEL WARNA & DASAR --- */
         :root {
@@ -11,7 +12,7 @@
             --warna-kua-hover: #146c43;
             --warna-aksen: #ffc107;
             /* Hijau KUA dengan transparansi lembut 5% */
-            --warna-bg: rgba(15, 81, 50, 0.50); 
+            --warna-bg: rgba(15, 81, 50, 0.05); 
             --warna-teks: #212529;
         }
 
@@ -47,13 +48,13 @@
             width: 100%;
         }
     
-        /* --- GAYA TEKS BERJALAN (SANGAT TIPIS & RAMPING) --- */
+        /* --- GAYA TEKS BERJALAN --- */
         .running-text-container {
             background-color: var(--warna-aksen); 
             color: #0b3d26; 
-            padding: 2px 0; /* Bar kuning dibuat setipis mungkin */
+            padding: 2px 0; 
             font-weight: 800; 
-            font-size: 0.80rem; /* Huruf diperkecil pas */
+            font-size: 0.80rem; 
             letter-spacing: 0.3px;
             border-top: 1px solid rgba(0,0,0,0.08);
             width: 100%;
@@ -73,7 +74,6 @@
             align-items: center;
         }
 
-        /* --- GAYA BARU LOGO KEMENAG (MENYATU DENGAN TEKS JUDUL) --- */
         .wrapper-judul-logo {
             display: flex;
             align-items: center;
@@ -127,7 +127,7 @@
             border-radius: 4px;
             transition: all 0.3s ease;
             cursor: pointer;
-            white-space: nowrap; /* Mencegah menu teks tertekuk ke bawah */
+            white-space: nowrap; 
         }
 
         nav ul li a:hover, nav ul li a.active {
@@ -168,7 +168,7 @@
             font-size: 1.4rem;
         }
 
-        /* --- TAMPILAN RUANG KABAR (SLIDER MODERN) --- */
+        /* --- SLIDER RUANG KABAR --- */
         .slider-container {
             position: relative;
             width: 100%;
@@ -218,7 +218,6 @@
             font-size: 1.2rem;
         }
 
-        /* --- INDIKATOR SLIDE (GARIS MODERN) --- */
         .slider-indicators {
             display: flex;
             justify-content: center;
@@ -242,7 +241,7 @@
             background-color: var(--warna-kua);
         }
 
-        /* --- GAYA HALAMAN PROFIL PEGAWAI --- */
+        /* --- GAYA PROFIL PEGAWAI --- */
         .kartu-pegawai {
             background: #f9f9f9;
             border: 1px solid #cbd5e1;
@@ -258,12 +257,12 @@
         }
         .avatar-pegawai {
             width: 120px;
-            height: 160px; /* Rasio pas foto formal 3:4 */
+            height: 160px; 
             object-fit: cover;
             border-radius: 6px;
             margin-bottom: 15px;
             border: 1px solid #333333;
-            background-color: #f1f5f9;
+            background-color: #ffffff; /* Latar belakang tempat foto putih bersih */
         }
         .nama-pegawai {
             font-weight: 700;
@@ -279,44 +278,6 @@
         .kartu-kepala {
             max-width: 280px;
             margin: 0 auto;
-            /*border-top: 4px solid var(--warna-kua);*/
-        }
-
-        /* --- TAMPILAN TABEL --- */
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-            background: white;
-            border-radius: 8px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        th {
-            background-color: var(--warna-kua);
-            color: white;
-            font-weight: 600;
-        }
-
-        tr:hover {
-            background-color: rgba(15, 81, 50, 0.02);
-        }
-
-        table img {
-            width: auto !important;
-            height: 60px !important; 
-            object-fit: contain;     
-            background-color: #fafafa;
         }
 
         /* --- TOMBOL CETAK --- */
@@ -375,14 +336,6 @@
                 margin-bottom: 3rem; 
                 page-break-inside: avoid; 
             }
-            table {
-                width: 100% !important;
-            }
-            th {
-                background-color: #f0f0f0 !important;
-                color: black !important;
-                border-bottom: 2px solid black;
-            }
             .slider-container {
                 border: none;
                 box-shadow: none;
@@ -439,28 +392,6 @@
                 height: 220px;
             }
         }
-
-        @media (max-height: 600px) and (max-width: 1024px) {
-            header { 
-                padding: 8px 0; 
-            }
-            .header-container { 
-                flex-direction: row; 
-                justify-content: space-between; 
-                align-items: center; 
-                text-align: left; 
-            }
-            .wrapper-judul-logo {
-                justify-content: flex-start; 
-                align-items: center; 
-            }
-            nav ul { 
-                flex-direction: row;
-                justify-content: flex-end;
-                align-items: center; 
-                gap: 8px; 
-            }
-        }
     </style>
 </head>
 <body>
@@ -470,7 +401,6 @@
             <div class="header-container">
                 <div class="wrapper-judul-logo">
                     <img src="https://raw.githubusercontent.com/dedekurniawan140488-svg/kua/refs/heads/main/logo-kemenag-png-1png.png" class="img-logo-kemenag" alt="Logo Kemenag">
-                    
                     <div class="logo-kua">
                         <h1>KUA DIGITAL</h1>
                         <p>Kantor Urusan Agama Tambusai Utara</p>
@@ -497,7 +427,6 @@
 
     <main id="konten-utama">
         
-        <!-- HALAMAN BERANDA -->
         <div id="beranda" class="halaman aktif">
             <div class="seksi">
                 <h2>Ruang Kabar</h2>
@@ -509,39 +438,23 @@
 
             <div class="seksi">
                 <h2>Pengumuman Kehendak Nikah</h2>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="width: 5%; text-align:center;">No</th>
-                                <th>Calon Suami</th>
-                                <th>Calon Istri</th>
-                                <th>Tanggal Akad</th>
-                                <th>Jam</th>
-                                <th>Lokasi Akad</th>
-                            </tr>
-                        </thead>
-                        <tbody id="data-nikah"></tbody>
-                    </table>
-                </div>
+                <div id="konten-pengumuman"></div>
+                
                 <button class="btn-cetak" onclick="window.print()" style="margin-top: 20px; margin-bottom: 5px;">
                     🖨️ Cetak / Simpan PDF
                 </button>
             </div>
         </div>
 
-        <!-- HALAMAN PROFIL BARU -->
         <div id="profil" class="halaman">
             <div class="seksi">
                 <h2>Profil & Struktur Organisasi</h2>
                 <p style="margin-bottom: 25px; color:#555;">Struktur Organisasi dan Personil Kantor Urusan Agama Tambusai Utara</p>
-                
                 <div id="kepala-kua-area" style="margin-bottom: 40px;"></div>
                 <div id="pegawai-grid-area" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;"></div>
             </div>
         </div>
 
-        <!-- HALAMAN LAYANAN -->
         <div id="layanan" class="halaman">
             <div class="seksi">
                 <h2>Menu Layanan</h2>
@@ -550,7 +463,6 @@
             </div>
         </div>
 
-        <!-- HALAMAN INFORMASI -->
         <div id="informasi" class="halaman">
             <div class="seksi">
                 <h2>Layanan Informasi</h2>
@@ -598,14 +510,15 @@
 
         async function ambilDataSpreadsheet() {
             try {
-                // Trik hancurkan cache agar data berita/pegawai baru langsung masuk
                 const urlAntiCache = SCRIPT_URL + (SCRIPT_URL.includes('?') ? '&' : '?') + '_=' + new Date().getTime();
-                
                 const respon = await fetch(urlAntiCache);
                 const database = await respon.json();
 
                 prosesBerita(database['berita'] || database['beranda']);
-                prosesPengumumkan(database['pengumuman']);
+                
+                // FIX: Pemanggilan fungsi typo sudah dibetulkan
+                prosesPengumuman(database['pengumuman']);
+                
                 prosesLayanan(database['layanan']);
                 prosesInformasi(database['informasi']);
                 prosesProfil(database['profil']); 
@@ -766,201 +679,183 @@
             areaPegawai.innerHTML = htmlPegawai || '<p style="grid-column: 1/-1; text-align:center; color:#777;">Belum ada data staf tambahan.</p>';
         }
 
-     function prosesPengumuman(data) {
-    const wadah = document.getElementById('konten-pengumuman'); 
-    if (!wadah) return;
-    if (!data || data.length === 0) {
-        wadah.innerHTML = '<p>Tidak ada pengumuman kehendak nikah terbaru.</p>';
-        return;
-    }
-
-    let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:25px;">';
-
-    // Tambahkan variabel 'index' di dalam loop untuk penomoran otomatis
-    data.forEach((item, index) => {
-        const nomorUrut = index + 1; // Membuat nomor mulai dari 1
-        const tanggal = dapatkanNilaiKolom(item, 'tanggal akad') || '-';
-        const jam = dapatkanNilaiKolom(item, 'jam') || '-';
-        const tempat = dapatkanNilaiKolom(item, 'tempat') || '-';
-        const lokasi = dapatkanNilaiKolom(item, 'lokasi') || '-';
-        
-        // Data Suami
-        const cgp = dapatkanNilaiKolom(item, 'calon suami') || '-';
-        const ayahCgp = dapatkanNilaiKolom(item, 'ayah cgp') || '-';
-        const ibuCgp = dapatkanNilaiKolom(item, 'ibu cgp') || '-';
-        const urlFotoCgp = dapatkanNilaiKolom(item, 'foto cgp') || '';
-
-        // Data Istri & Wali
-        const cgw = dapatkanNilaiKolom(item, 'calon istri') || '-';
-        const ayahCgw = dapatkanNilaiKolom(item, 'ayah cgw') || '-';
-        const ibuCgw = dapatkanNilaiKolom(item, 'ibu cgw') || '-';
-        const wali = dapatkanNilaiKolom(item, 'wali') || '-';
-        const urlFotoCgw = dapatkanNilaiKolom(item, 'foto cgw') || '';
-
-        // Logika Foto Siluet Default
-        const komponenFotoCgp = urlFotoCgp 
-            ? `<img src="${urlFotoCgp}" style="width: 55px; height: 70px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1;" />`
-            : `<div style="width: 55px; height: 70px; background: #e2e8f0; color: #94a3b8; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 1.5rem;"><i class="fas fa-user"></i></div>`;
-
-        const komponenFotoCgw = urlFotoCgw 
-            ? `<img src="${urlFotoCgw}" style="width: 55px; height: 70px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1;" />`
-            : `<div style="width: 55px; height: 70px; background: #e2e8f0; color: #94a3b8; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 1.5rem;"><i class="fas fa-user-female"></i></div>`;
-
-        html += `
-            <div style="background: #ffffff; padding: 22px; border-radius: 10px; border: 1px solid #cbd5e1; border-top: 5px solid var(--warna-kua); box-shadow: 0 4px 12px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between; position: relative;">
-                
-                <!-- Nomor Urut Otomatis Dipasang di Pojok Kiri Atas -->
-                <div style="position: absolute; top: -1px; left: 15px; background: var(--warna-kua); color: #ffffff; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    #${nomorUrut}
-                </div>
-
-                <!-- Header Card: Tanggal & Jam -->
-                <div style="text-align: center; margin-bottom: 15px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 12px; padding-top: 5px;">
-                    <span style="background: #e2ede8; color: var(--warna-kua); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px;">PENGUMUMAN NIKAH</span>
-                    <p style="margin: 8px 0 0 0; font-size: 0.9rem; color: #334155;">
-                        <i class="fas fa-calendar-alt" style="color: var(--warna-kua);"></i> <b>${tanggal}</b> 
-                        <span style="margin: 0 5px; color: #cbd5e1;">|</span> 
-                        <i class="fas fa-clock" style="color: #64748b;"></i> <b>${jam} WIB</b>
-                    </p>
-                </div>
-                
-                <!-- Badan Card: Informasi Catin & Foto -->
-                <div style="display: flex; flex-direction: column; gap: 12px; flex-grow: 1;">
-                    
-                    <!-- Blok Calon Suami -->
-                    <div style="background: #f8fafc; padding: 10px; border-radius: 6px; border-left: 4px solid #0284c7; display: flex; gap: 12px; align-items: center;">
-                        ${komponenFotoCgp}
-                        <div style="flex-grow: 1;">
-                            <p style="font-size: 0.75rem; color: #64748b; margin: 0; text-transform: uppercase; font-weight: 600;">Calon Suami</p>
-                            <p style="font-weight: 700; color: #0f172a; margin: 1px 0 4px 0; font-size: 1rem;">${cgp}</p>
-                            <p style="font-size: 0.8rem; color: #475569; margin: 0;">Bin: <b>${ayahCgp}</b> & <b>${ibuCgp}</b></p>
-                        </div>
-                    </div>
-
-                    <div style="text-align: center; color: #94a3b8; font-weight: 800; font-size: 0.8rem; letter-spacing: 1px; margin: -4px 0;">DENGAN</div>
-
-                    <!-- Blok Calon Istri -->
-                    <div style="background: #f8fafc; padding: 10px; border-radius: 6px; border-left: 4px solid #ec4899; display: flex; gap: 12px; align-items: center;">
-                        ${komponenFotoCgw}
-                        <div style="flex-grow: 1;">
-                            <p style="font-size: 0.75rem; color: #64748b; margin: 0; text-transform: uppercase; font-weight: 600;">Calon Istri</p>
-                            <p style="font-weight: 700; color: #0f172a; margin: 1px 0 4px 0; font-size: 1rem;">${cgw}</p>
-                            <p style="font-size: 0.8rem; color: #475569; margin: 0 0 4px 0;">Binti: <b>${ayahCgw}</b> & <b>${ibuCgw}</b></p>
-                            <p style="font-size: 0.8rem; color: #b45309; background: #fef3c7; display: inline-block; padding: 1px 6px; border-radius: 4px; margin: 0;">Wali: <b>${wali}</b></p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Footer Card: Tempat & Lokasi (Alamat) -->
-                <div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed #e2e8f0; font-size: 0.85rem; color: #334155; display: flex; flex-direction: column; gap: 6px;">
-                    <div>
-                        <i class="fas fa-building" style="color: var(--warna-kua); width: 16px;"></i> 
-                        <span>Tempat: <b style="color: #0f172a;">${tempat}</b></span>
-                    </div>
-                    <div style="display: flex; align-items: flex-start; gap: 6px;">
-                        <i class="fas fa-map-marker-alt" style="color: #ef4444; margin-top: 3px; width: 16px;"></i> 
-                        <span>Alamat: <b style="color: #0f172a;">${lokasi}</b></span>
-                    </div>
-                </div>
-
-            </div>
-        `;
-    });
-
-    html += '</div>';
-    wadah.innerHTML = html;
-}
-
-        
-    function prosesLayanan(data) {
-    const wadah = document.getElementById('konten-layanan');
-    if (!wadah) return;
-    if (!data || data.length === 0) {
-        wadah.innerHTML = '<p>Daftar layanan kosong.</p>';
-        return;
-    }
-    let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">';
-    data.forEach(item => {
-        const nama = dapatkanNilaiKolom(item, 'nama layanan') || 'Layanan';
-        const detailRaw = dapatkanNilaiKolom(item, 'penjelasan') || 
-                          dapatkanNilaiKolom(item, 'keterangan') || 
-                          dapatkanNilaiKolom(item, 'deskripsi') || '';
-
-        let detailHTML = '-';
-
-        if (detailRaw) {
-            // Memecah teks berdasarkan Enter baru atau berdasarkan tanda titik koma (;)
-            const poinPoin = detailRaw.toString().split(/\n|;/);
-            
-            // Bersihkan spasi kosong dan buat baris angka (<ol>)
-            detailHTML = '<ol style="padding-left: 20px; margin-top: 5px;">';
-            poinPoin.forEach(poin => {
-                if (poin.trim() !== '') {
-                    detailHTML += `<li style="margin-bottom: 5px;">${poin.trim()}</li>`;
-                }
-            });
-            detailHTML += '</ol>';
-        }
-            html += `
-                <div style="background: #f9f9f9; padding: 22px; border-radius: 8px; border: 1px solid #cbd5e1; border-left: 5px solid var(--warna-kua); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); height: 100%; transition: transform 0.2s;">
-                    <h3 style="color: var(--warna-kua); margin-bottom: 12px; font-size: 1.15rem; font-weight: 700; border-bottom: 1px dashed #e2e8f0; padding-bottom: 6px;">${nama}</h3>
-                    <div style="font-size: 0.95rem; color: #334155; line-height: 1.6;">${detailHTML}</div>
-                </div>
-            `;
-        
-    });
-    html += '</div>';
-    wadah.innerHTML = html;
-}
-    function prosesInformasi(data) {
-    const wadah = document.getElementById('konten-informasi');
-    if (!wadah) return;
-    if (!data || data.length === 0) {
-        wadah.innerHTML = '<p>Daftar informasi kosong.</p>';
-        return;
-    }
-    
-    // Membuat layout grid yang responsif, sama persis seperti menu layanan
-    let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">';
-    
-    data.forEach(item => {
-        const kategori = dapatkanNilaiKolom(item, 'kategori') || 'Informasi';
-        const keteranganRaw = dapatkanNilaiKolom(item, 'keterangan') || '-';
-
-        let keteranganHTML = '';
-
-        if (keteranganRaw) {
-            // Memecah teks jika user menggunakan Enter atau Titik Koma (;) agar bisa jadi poin-poin rapi
-            const poinPoin = keteranganRaw.toString().split(/\n|;/);
-            
-            if (poinPoin.length > 1) {
-                // Jika isinya banyak dan ada pemisah, otomatis jadi daftar angka
-                keteranganHTML = '<ol style="padding-left: 20px; margin-top: 5px;">';
-                poinPoin.forEach(poin => {
-                    if (poin.trim() !== '') {
-                        keteranganHTML += `<li style="margin-bottom: 5px;">${poin.trim()}</li>`;
-                    }
-                });
-                keteranganHTML += '</ol>';
-            } else {
-                // Jika hanya teks biasa/paragraf pendek, tampilkan normal dengan retensi baris baru
-                keteranganHTML = `<p style="white-space: pre-line;">${keteranganRaw}</p>`;
+        function prosesPengumuman(data) {
+            const wadah = document.getElementById('konten-pengumuman'); 
+            if (!wadah) return;
+            if (!data || data.length === 0) {
+                wadah.innerHTML = '<p>Tidak ada pengumuman kehendak nikah terbaru.</p>';
+                return;
             }
+
+            let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:25px;">';
+
+            data.forEach((item, index) => {
+                const nomorUrut = index + 1; 
+                const tanggal = dapatkanNilaiKolom(item, 'tanggal akad') || '-';
+                const jam = dapatkanNilaiKolom(item, 'jam') || '-';
+                const tempat = dapatkanNilaiKolom(item, 'tempat') || '-';
+                const lokasi = dapatkanNilaiKolom(item, 'lokasi') || '-';
+                
+                // Data Suami
+                const cgp = dapatkanNilaiKolom(item, 'calon suami') || '-';
+                const ayahCgp = dapatkanNilaiKolom(item, 'ayah cgp') || '-';
+                const ibuCgp = dapatkanNilaiKolom(item, 'ibu cgp') || '-';
+                const urlFotoCgp = dapatkanNilaiKolom(item, 'foto cgp') || '';
+
+                // Data Istri & Wali
+                const cgw = dapatkanNilaiKolom(item, 'calon istri') || '-';
+                const ayahCgw = dapatkanNilaiKolom(item, 'ayah cgw') || '-';
+                const ibuCgw = dapatkanNilaiKolom(item, 'ibu cgw') || '-';
+                const wali = dapatkanNilaiKolom(item, 'wali') || '-';
+                const urlFotoCgw = dapatkanNilaiKolom(item, 'foto cgw') || '';
+
+                const komponenFotoCgp = urlFotoCgp 
+                    ? `<img src="${urlFotoCgp}" style="width: 55px; height: 70px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1;" />`
+                    : `<div style="width: 55px; height: 70px; background: #e2e8f0; color: #94a3b8; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 1.5rem;"><i class="fas fa-user"></i></div>`;
+
+                const komponenFotoCgw = urlFotoCgw 
+                    ? `<img src="${urlFotoCgw}" style="width: 55px; height: 70px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1;" />`
+                    : `<div style="width: 55px; height: 70px; background: #e2e8f0; color: #94a3b8; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 1.5rem;"><i class="fas fa-user-female"></i></div>`;
+
+                html += `
+                    <div style="background: #ffffff; padding: 22px; border-radius: 10px; border: 1px solid #cbd5e1; border-top: 5px solid var(--warna-kua); box-shadow: 0 4px 12px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                        
+                        <div style="position: absolute; top: -1px; left: 15px; background: var(--warna-kua); color: #ffffff; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            #${nomorUrut}
+                        </div>
+
+                        <div style="text-align: center; margin-bottom: 15px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 12px; padding-top: 5px;">
+                            <span style="background: #e2ede8; color: var(--warna-kua); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px;">PENGUMUMAN NIKAH</span>
+                            <p style="margin: 8px 0 0 0; font-size: 0.9rem; color: #334155;">
+                                <i class="fas fa-calendar-alt" style="color: var(--warna-kua);"></i> <b>${tanggal}</b> 
+                                <span style="margin: 0 5px; color: #cbd5e1;">|</span> 
+                                <i class="fas fa-clock" style="color: #64748b;"></i> <b>${jam} WIB</b>
+                            </p>
+                        </div>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 12px; flex-grow: 1;">
+                            
+                            <div style="background: #f8fafc; padding: 10px; border-radius: 6px; border-left: 4px solid #0284c7; display: flex; gap: 12px; align-items: center;">
+                                ${komponenFotoCgp}
+                                <div style="flex-grow: 1;">
+                                    <p style="font-size: 0.75rem; color: #64748b; margin: 0; text-transform: uppercase; font-weight: 600;">Calon Suami</p>
+                                    <p style="font-weight: 700; color: #0f172a; margin: 1px 0 4px 0; font-size: 1rem;">${cgp}</p>
+                                    <p style="font-size: 0.8rem; color: #475569; margin: 0;">Bin: <b>${ayahCgp}</b> & <b>${ibuCgp}</b></p>
+                                </div>
+                            </div>
+
+                            <div style="text-align: center; color: #94a3b8; font-weight: 800; font-size: 0.8rem; letter-spacing: 1px; margin: -4px 0;">DENGAN</div>
+
+                            <div style="background: #f8fafc; padding: 10px; border-radius: 6px; border-left: 4px solid #ec4899; display: flex; gap: 12px; align-items: center;">
+                                ${komponenFotoCgw}
+                                <div style="flex-grow: 1;">
+                                    <p style="font-size: 0.75rem; color: #64748b; margin: 0; text-transform: uppercase; font-weight: 600;">Calon Istri</p>
+                                    <p style="font-weight: 700; color: #0f172a; margin: 1px 0 4px 0; font-size: 1rem;">${cgw}</p>
+                                    <p style="font-size: 0.8rem; color: #475569; margin: 0 0 4px 0;">Binti: <b>${ayahCgw}</b> & <b>${ibuCgw}</b></p>
+                                    <p style="font-size: 0.8rem; color: #b45309; background: #fef3c7; display: inline-block; padding: 1px 6px; border-radius: 4px; margin: 0;">Wali: <b>${wali}</b></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed #e2e8f0; font-size: 0.85rem; color: #334155; display: flex; flex-direction: column; gap: 6px;">
+                            <div>
+                                <i class="fas fa-building" style="color: var(--warna-kua); width: 16px;"></i> 
+                                <span>Tempat: <b style="color: #0f172a;">${tempat}</b></span>
+                            </div>
+                            <div style="display: flex; align-items: flex-start; gap: 6px;">
+                                <i class="fas fa-map-marker-alt" style="color: #ef4444; margin-top: 3px; width: 16px;"></i> 
+                                <span>Alamat: <b style="color: #0f172a;">${lokasi}</b></span>
+                            </div>
+                        </div>
+
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            wadah.innerHTML = html;
         }
 
-        // Cetak kartu dengan desain yang sudah dipertegas (senada dengan menu layanan)
-        html += `
-            <div style="background: #f9f9f9; padding: 22px; border-radius: 8px; border: 1px solid #cbd5e1; border-left: 5px solid var(--warna-kua); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); height: 100%;">
-                <h3 style="color: var(--warna-kua); margin-bottom: 12px; font-size: 1.15rem; font-weight: 700; border-bottom: 1px dashed #e2e8f0; padding-bottom: 6px;">${kategori}</h3>
-                <div style="font-size: 0.95rem; color: #334155; line-height: 1.6;">${keteranganHTML}</div>
-            </div>
-        `;
-    });
-    
-    html += '</div>';
-    wadah.innerHTML = html;
-}
+        function prosesLayanan(data) {
+            const wadah = document.getElementById('konten-layanan');
+            if (!wadah) return;
+            if (!data || data.length === 0) {
+                wadah.innerHTML = '<p>Daftar layanan kosong.</p>';
+                return;
+            }
+            let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">';
+            data.forEach(item => {
+                const nama = dapatkanNilaiKolom(item, 'nama layanan') || 'Layanan';
+                const detailRaw = dapatkanNilaiKolom(item, 'penjelasan') || 
+                                  dapatkanNilaiKolom(item, 'keterangan') || 
+                                  dapatkanNilaiKolom(item, 'deskripsi') || '';
 
+                let detailHTML = '-';
+
+                if (detailRaw) {
+                    const poinPoin = detailRaw.toString().split(/\n|;/);
+                    detailHTML = '<ol style="padding-left: 20px; margin-top: 5px;">';
+                    poinPoin.forEach(poin => {
+                        if (poin.trim() !== '') {
+                            detailHTML += `<li style="margin-bottom: 5px;">${poin.trim()}</li>`;
+                        }
+                    });
+                    detailHTML += '</ol>';
+                }
+                html += `
+                    <div style="background: #f9f9f9; padding: 22px; border-radius: 8px; border: 1px solid #cbd5e1; border-left: 5px solid var(--warna-kua); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); height: 100%; transition: transform 0.2s;">
+                        <h3 style="color: var(--warna-kua); margin-bottom: 12px; font-size: 1.15rem; font-weight: 700; border-bottom: 1px dashed #e2e8f0; padding-bottom: 6px;">${nama}</h3>
+                        <div style="font-size: 0.95rem; color: #334155; line-height: 1.6;">${detailHTML}</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            wadah.innerHTML = html;
+        }
+
+        function prosesInformasi(data) {
+            const wadah = document.getElementById('konten-informasi');
+            if (!wadah) return;
+            if (!data || data.length === 0) {
+                wadah.innerHTML = '<p>Daftar informasi kosong.</p>';
+                return;
+            }
+            
+            let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">';
+            
+            data.forEach(item => {
+                const kategori = dapatkanNilaiKolom(item, 'kategori') || 'Informasi';
+                const keteranganRaw = dapatkanNilaiKolom(item, 'keterangan') || '-';
+
+                let keteranganHTML = '';
+
+                if (keteranganRaw) {
+                    const poinPoin = keteranganRaw.toString().split(/\n|;/);
+                    
+                    if (poinPoin.length > 1) {
+                        keteranganHTML = '<ol style="padding-left: 20px; margin-top: 5px;">';
+                        poinPoin.forEach(poin => {
+                            if (poin.trim() !== '') {
+                                keteranganHTML += `<li style="margin-bottom: 5px;">${poin.trim()}</li>`;
+                            }
+                        });
+                        keteranganHTML += '</ol>';
+                    } else {
+                        keteranganHTML = `<p style="white-space: pre-line;">${keteranganRaw}</p>`;
+                    }
+                }
+
+                html += `
+                    <div style="background: #f9f9f9; padding: 22px; border-radius: 8px; border: 1px solid #cbd5e1; border-left: 5px solid var(--warna-kua); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); height: 100%;">
+                        <h3 style="color: var(--warna-kua); margin-bottom: 12px; font-size: 1.15rem; font-weight: 700; border-bottom: 1px dashed #e2e8f0; padding-bottom: 6px;">${kategori}</h3>
+                        <div style="font-size: 0.95rem; color: #334155; line-height: 1.6;">${keteranganHTML}</div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            wadah.innerHTML = html;
+        }
 
         function tampilkanKalenderDigital() {
             const sekarang = new Date();
@@ -1011,8 +906,6 @@
             tampilkanKalenderDigital();
             ambilDataSpreadsheet();
             sesuaikanJarakKontenAtas();
-
-            // Jalankan pengambilan data otomatis dari spreadsheet setiap 5 menit
             setInterval(ambilDataSpreadsheet, 5 * 60 * 1000); 
         });
         
