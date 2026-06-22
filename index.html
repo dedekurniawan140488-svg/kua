@@ -150,26 +150,33 @@
         .halaman.aktif {
             display: block;
         }
+    .seksi {
+    background: white;
+    /* Catatan: padding atas diset 0 agar judul hijau bisa menempel sempurna ke atas */
+    padding: 0 25px 25px 25px; 
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+    overflow: hidden; /* Memastikan sudut tajam judul ikut melengkung mengikuti kotak utama */
+}
 
-        .seksi {
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 25px;
-        }
-            .seksi h2 {
-                background-color: #1e7e4e; /* Hijau KUA versi lebih muda dan segar */
-                color: white; /* Mengubah warna teks judul menjadi putih bersih */
-                margin-bottom: 20px;
-                padding: 8px 18px; /* Memberikan ruang di dalam bungkusan hijau */
-                display: inline-block;
-                font-size: 1.3rem;
-                border-radius: 6px; /* Membuat sudut bungkusan menjadi agak bulat lembut */
-                box-shadow: 0 2px 4px rgba(0,0,0,0.08); /* Memberikan efek bayangan tipis agar estetik */
-            }
-
-        
+.seksi h2 {
+    background-color: #1e7e4e; /* Warna hijau KUA muda */
+    color: white;
+    margin-bottom: 25px;
+    
+    /* Membuat kotak hijau melebar penuh memotong padding kiri-kanan induknya */
+    margin-left: -25px;
+    margin-right: -25px;
+    padding: 12px 25px; 
+    
+    display: block; /* Mengubah dari inline-block menjadi block agar otomatis full */
+    font-size: 1.3rem;
+    
+    /* Menghilangkan bayangan mengambang karena sekarang sudah menyatu */
+    box-shadow: none; 
+    border-radius: 0; 
+}
 
         /* --- SLIDER RUANG KABAR --- */
         .slider-container {
