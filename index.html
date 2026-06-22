@@ -847,29 +847,55 @@
     html += '</div>';
     wadah.innerHTML = html;
 }
-        
-        function prosesInformasi(data) {
-            const wadah = document.getElementById('konten-informasi');
-            if (!wadah) return;
-            if (!data || data.length === 0) {
-                wadah.innerHTML = '<p>Daftar informasi kosong.</p>';
-                return;
-            }
-            let html = '<table><thead><tr><th>Kategori</th><th>Keterangan</th></tr></thead><tbody>';
-            data.forEach(item => {
-                const kategori = dapatkanNilaiKolom(item, 'kategori') || '-';
-                const keterangan = dapatkanNilaiKolom(item, 'keterangan') || '-';
+    function prosesInformasi(data) {
+    const wadah = document.getElementById('konten-informasi');
+    if (!wadah) return;
+    if (!data || data.length === 0) {
+        wadah.innerHTML = '<p>Daftar informasi kosong.</p>';
+        return;
+    }
+    
+    // Membuat layout grid yang responsif, sama persis seperti menu layanan
+    let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">';
+    
+    data.forEach(item => {
+        const kategori = dapatkanNilaiKolom(item, 'kategori') || 'Informasi';
+        const keteranganRaw = dapatkanNilaiKolom(item, 'keterangan') || '-';
 
-                html += `
-                    <tr>
-                        <td style="font-weight:bold; color:var(--warna-kua); width:30%; vertical-align:top;">${kategori}</td>
-                        <td style="white-space: pre-line;">${keterangan}</td>
-                    </tr>
-                `;
-            });
-            html += '</tbody></table>';
-            wadah.innerHTML = html;
+        let keteranganHTML = '';
+
+        if (keteranganRaw) {
+            // Memecah teks jika user menggunakan Enter atau Titik Koma (;) agar bisa jadi poin-poin rapi
+            const poinPoin = keteranganRaw.toString().split(/\n|;/);
+            
+            if (poinPoin.length > 1) {
+                // Jika isinya banyak dan ada pemisah, otomatis jadi daftar angka
+                keteranganHTML = '<ol style="padding-left: 20px; margin-top: 5px;">';
+                poinPoin.forEach(poin => {
+                    if (poin.trim() !== '') {
+                        keteranganHTML += `<li style="margin-bottom: 5px;">${poin.trim()}</li>`;
+                    }
+                });
+                keteranganHTML += '</ol>';
+            } else {
+                // Jika hanya teks biasa/paragraf pendek, tampilkan normal dengan retensi baris baru
+                keteranganHTML = `<p style="white-space: pre-line;">${keteranganRaw}</p>`;
+            }
         }
+
+        // Cetak kartu dengan desain yang sudah dipertegas (senada dengan menu layanan)
+        html += `
+            <div style="background: #f9f9f9; padding: 22px; border-radius: 8px; border: 1px solid #cbd5e1; border-left: 5px solid var(--warna-kua); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); height: 100%;">
+                <h3 style="color: var(--warna-kua); margin-bottom: 12px; font-size: 1.15rem; font-weight: 700; border-bottom: 1px dashed #e2e8f0; padding-bottom: 6px;">${kategori}</h3>
+                <div style="font-size: 0.95rem; color: #334155; line-height: 1.6;">${keteranganHTML}</div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    wadah.innerHTML = html;
+}
+
 
         function tampilkanKalenderDigital() {
             const sekarang = new Date();
