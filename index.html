@@ -533,28 +533,31 @@
             }
         }
         
-        function dapatkanNilaiKolom(item, kataKunci) {
-            const kunciDitemukan = Object.keys(item).find(k => k.toLowerCase().trim() === kataKunci.toLowerCase().trim());
-            if (!kunciDitemukan) return null;
-            
-            let nilai = item[kunciDitemukan];
-            
-            if (nilai && typeof nilai === 'string' && nilai.includes('T') && nilai.endsWith('Z')) {
-                try {
-                    const objekTanggal = new Date(nilai);
-                    if (!isNaN(objekTanggal)) {
-                        return objekTanggal.toLocaleDateString('id-ID', {
-                            day: 'numeric',
-                            month: 'long',
-                            year: 'numeric'
-                        });
-                    }
-                } catch (e) {
-                    console.error("Gagal mengubah format tanggal:", e);
-                }
+    function dapatkanNilaiKolom(item, kataKunci) {
+    const kunciDitemukan = Object.keys(item).find(k => k.toLowerCase().trim() === kataKunci.toLowerCase().trim());
+    if (!kunciDitemukan) return null;
+    
+    let nilai = item[kunciDitemukan];
+    
+    if (nilai && typeof nilai === 'string' && nilai.includes('T') && nilai.endsWith('Z')) {
+        try {
+            const objekTanggal = new Date(nilai);
+            if (!isNaN(objekTanggal)) {
+                // TAMBAHAN: Menambahkan weekday: 'long' agar memunculkan nama hari (Senin, Selasa, dst.)
+                return objekTanggal.toLocaleDateString('id-ID', {
+                    weekday: 'long', 
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
             }
-            return nilai;
+        } catch (e) {
+            console.error("Gagal mengubah format tanggal:", e);
         }
+    }
+    return nilai;
+}
+
 
         function prosesBerita(data) {
             const wadah = document.getElementById('konten-berita');
@@ -718,7 +721,7 @@
                     : `<div style="width: 55px; height: 70px; background: #e2e8f0; color: #94a3b8; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 1.5rem;"><i class="fas fa-user-female"></i></div>`;
 
                 html += `
-                    <div style="background: #ffffff; padding: 22px; border-radius: 10px; border: 1px solid #cbd5e1; border-top: 5px solid var(--warna-kua); box-shadow: 0 4px 12px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                    <div style="background: #f9f9f9; padding: 22px; border-radius: 10px; border: 1px solid #cbd5e1; border-top: 5px solid var(--warna-kua); box-shadow: 0 4px 12px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between; position: relative;">
                         
                         <div style="position: absolute; top: -1px; left: 15px; background: var(--warna-kua); color: #ffffff; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                             #${nomorUrut}
