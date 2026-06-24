@@ -568,7 +568,6 @@
     return nilai;
 }
 
-
         function prosesBerita(data) {
             const wadah = document.getElementById('konten-berita');
             const wadahIndikator = document.getElementById('slider-indicators');
@@ -618,7 +617,7 @@
             intervalSlider = setInterval(() => {
                 slideIndexSekarang = (slideIndexSekarang + 1) % totalSlide;
                 updatePosisiSlider();
-            }, 5000);
+            }, 10000);
         }
 
         function updatePosisiSlider() {
