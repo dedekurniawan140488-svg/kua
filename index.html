@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -150,33 +151,34 @@
         .halaman.aktif {
             display: block;
         }
-    .seksi {
-    background: white;
-    /* Catatan: padding atas diset 0 agar judul hijau bisa menempel sempurna ke atas */
-    padding: 0 25px 25px 25px; 
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    margin-bottom: 25px;
-    overflow: hidden; /* Memastikan sudut tajam judul ikut melengkung mengikuti kotak utama */
-}
+        
+        .seksi {
+            background: white;
+            /* padding atas diset 0 agar judul hijau bisa menempel sempurna ke atas */
+            padding: 0 25px 25px 25px; 
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            overflow: hidden; /* Memastikan sudut tajam judul ikut melengkung mengikuti kotak utama */
+        }
 
-.seksi h2 {
-    background-color: var(--warna-kua); /* Mengambil warna hijau yang sama dengan header atas */
-    color: white;
-    margin-bottom: 25px;
-    
-    /* Membuat kotak hijau melebar penuh memotong padding kiri-kanan induknya */
-    margin-left: -25px;
-    margin-right: -25px;
-    padding: 12px 25px; 
-    
-    display: block; /* Mengubah dari inline-block menjadi block agar otomatis full */
-    font-size: 1rem;
-    text-align: center; /* --- MENJADIKAN TEKS JUDUL DI TENGAH (CENTER) --- */
-    /* Menghilangkan bayangan mengambang karena sekarang sudah menyatu */
-    box-shadow: none; 
-    border-radius: 0; 
-}
+        .seksi h2 {
+            background-color: var(--warna-kua); /* Mengambil warna hijau yang sama dengan header atas */
+            color: white;
+            margin-bottom: 25px;
+            
+            /* Membuat kotak hijau melebar penuh memotong padding kiri-kanan induknya */
+            margin-left: -25px;
+            margin-right: -25px;
+            padding: 12px 25px; 
+            
+            display: block; /* Mengubah dari inline-block menjadi block agar otomatis full */
+            font-size: 1rem;
+            text-align: center; /* --- MENJADIKAN TEKS JUDUL DI TENGAH (CENTER) --- */
+            /* Menghilangkan bayangan mengambang karena sekarang sudah menyatu */
+            box-shadow: none; 
+            border-radius: 0; 
+        }
 
         /* --- SLIDER RUANG KABAR --- */
         .slider-container {
@@ -526,7 +528,7 @@
 
                 prosesBerita(database['berita'] || database['beranda']);
                 
-                // FIX: Pemanggilan fungsi typo sudah dibetulkan
+                // Pemanggilan fungsi prosesPengumuman
                 prosesPengumuman(database['pengumuman']);
                 
                 prosesLayanan(database['layanan']);
@@ -543,30 +545,30 @@
             }
         }
         
-    function dapatkanNilaiKolom(item, kataKunci) {
-    const kunciDitemukan = Object.keys(item).find(k => k.toLowerCase().trim() === kataKunci.toLowerCase().trim());
-    if (!kunciDitemukan) return null;
-    
-    let nilai = item[kunciDitemukan];
-    
-    if (nilai && typeof nilai === 'string' && nilai.includes('T') && nilai.endsWith('Z')) {
-        try {
-            const objekTanggal = new Date(nilai);
-            if (!isNaN(objekTanggal)) {
-                // TAMBAHAN: Menambahkan weekday: 'long' agar memunculkan nama hari (Senin, Selasa, dst.)
-                return objekTanggal.toLocaleDateString('id-ID', {
-                    weekday: 'long', 
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric'
-                });
+        function dapatkanNilaiKolom(item, kataKunci) {
+            const kunciDitemukan = Object.keys(item).find(k => k.toLowerCase().trim() === kataKunci.toLowerCase().trim());
+            if (!kunciDitemukan) return null;
+            
+            let nilai = item[kunciDitemukan];
+            
+            if (nilai && typeof nilai === 'string' && nilai.includes('T') && nilai.endsWith('Z')) {
+                try {
+                    const objekTanggal = new Date(nilai);
+                    if (!isNaN(objekTanggal)) {
+                        // Menambahkan weekday: 'long' agar memunculkan nama hari (Senin, Selasa, dst.)
+                        return objekTanggal.toLocaleDateString('id-ID', {
+                            weekday: 'long', 
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                        });
+                    }
+                } catch (e) {
+                    console.error("Gagal mengubah format tanggal:", e);
+                }
             }
-        } catch (e) {
-            console.error("Gagal mengubah format tanggal:", e);
+            return nilai;
         }
-    }
-    return nilai;
-}
 
         function prosesBerita(data) {
             const wadah = document.getElementById('konten-berita');
@@ -580,7 +582,8 @@
             
             let htmlCard = '';
             let htmlIndikator = '';
-            const dataTerbalik = [...data].reverse().slice(0, 3); 
+            // DIUBAH: Mengambil 5 berita terbaru secara terbalik (reverse) dari spreadsheet
+            const dataTerbalik = [...data].reverse().slice(0, 5); 
             totalSlide = dataTerbalik.length;
             
             dataTerbalik.forEach((item, index) => {
@@ -824,65 +827,65 @@
             html += '</div>';
             wadah.innerHTML = html;
         }
-    function prosesInformasi(data) {
-    const wadah = document.getElementById('konten-informasi');
-    if (!wadah) return;
-    if (!data || data.length === 0) {
-        wadah.innerHTML = '<p>Daftar informasi kosong.</p>';
-        return;
-    }
-    
-    let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">';
-    
-    data.forEach(item => {
-        const kategori = dapatkanNilaiKolom(item, 'kategori') || 'Informasi';
-        const keteranganRaw = dapatkanNilaiKolom(item, 'keterangan') || '-';
-
-        let keteranganHTML = '';
-
-        if (keteranganRaw) {
-            // Memisahkan teks berdasarkan baris baru atau titik koma
-            const poinPoin = keteranganRaw.toString().split(/\n|;/);
+        
+        function prosesInformasi(data) {
+            const wadah = document.getElementById('konten-informasi');
+            if (!wadah) return;
+            if (!data || data.length === 0) {
+                wadah.innerHTML = '<p>Daftar informasi kosong.</p>';
+                return;
+            }
             
-            // Menggunakan pembungkus list dengan style flexbox agar lurus rapi
-            keteranganHTML = '<ul style="list-style: none; padding-left: 0; margin-top: 5px;">';
+            let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">';
             
-            poinPoin.forEach(poin => {
-                if (poin.trim() !== '') {
-                    // Cek apakah di dalam baris ada tanda titik dua (:) untuk data bulan & jumlah
-                    if (poin.includes(':')) {
-                        const bagian = poin.split(':');
-                        const kiri = bagian[0].trim();
-                        // Menggabungkan sisa teks jika ada lebih dari satu titik dua
-                        const kanan = bagian.slice(1).join(':').trim(); 
-                        
-                        // Menampilkan dengan sistem Flexbox: Kiri rata kiri, Kanan rata kanan
-                        keteranganHTML += `
-                            <li style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dotted #e2e8f0; padding-bottom: 4px;">
-                                <span style="font-weight: 600; color: #475569;">${kiri}</span>
-                                <span style="font-weight: 700; color: var(--warna-kua); background: #e2ede8; padding: 1px 8px; border-radius: 4px; font-size: 0.9rem;">${kanan}</span>
-                            </li>`;
-                    } else {
-                        // Jika baris teks biasa tanpa titik dua
-                        keteranganHTML += `<li style="margin-bottom: 6px; color: #334155;">${poin.trim()}</li>`;
-                    }
+            data.forEach(item => {
+                const kategori = dapatkanNilaiKolom(item, 'kategori') || 'Informasi';
+                const keteranganRaw = dapatkanNilaiKolom(item, 'keterangan') || '-';
+
+                let keteranganHTML = '';
+
+                if (keteranganRaw) {
+                    // Memisahkan teks berdasarkan baris baru atau titik koma
+                    const poinPoin = keteranganRaw.toString().split(/\n|;/);
+                    
+                    // Menggunakan pembungkus list dengan style flexbox agar lurus rapi
+                    keteranganHTML = '<ul style="list-style: none; padding-left: 0; margin-top: 5px;">';
+                    
+                    poinPoin.forEach(poin => {
+                        if (poin.trim() !== '') {
+                            // Cek apakah di dalam baris ada tanda titik dua (:) untuk data bulan & jumlah
+                            if (poin.includes(':')) {
+                                const bagian = poin.split(':');
+                                const kiri = bagian[0].trim();
+                                // Menggabungkan sisa teks jika ada lebih dari satu titik dua
+                                const kanan = bagian.slice(1).join(':').trim(); 
+                                
+                                // Menampilkan dengan sistem Flexbox: Kiri rata kiri, Kanan rata kanan
+                                keteranganHTML += `
+                                    <li style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dotted #e2e8f0; padding-bottom: 4px;">
+                                        <span style="font-weight: 600; color: #475569;">${kiri}</span>
+                                        <span style="font-weight: 700; color: var(--warna-kua); background: #e2ede8; padding: 1px 8px; border-radius: 4px; font-size: 0.9rem;">${kanan}</span>
+                                    </li>`;
+                            } else {
+                                // Jika baris teks biasa tanpa titik dua
+                                keteranganHTML += `<li style="margin-bottom: 6px; color: #334155;">${poin.trim()}</li>`;
+                            }
+                        }
+                    });
+                    keteranganHTML += '</ul>';
                 }
+
+                html += `
+                    <div style="background: #f9f9f9; padding: 22px; border-radius: 8px; border: 1px solid #cbd5e1; border-left: 4px solid var(--warna-kua); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); height: 100%; display: flex; flex-direction: column;">
+                        <h3 style="color: var(--warna-kua); margin-bottom: 15px; font-size: 1.15rem; font-weight: 700; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; text-align: center;">${kategori}</h3>
+                        <div style="font-size: 0.95rem; line-height: 1.6; flex-grow: 1;">${keteranganHTML}</div>
+                    </div>
+                `;
             });
-            keteranganHTML += '</ul>';
+            
+            html += '</div>';
+            wadah.innerHTML = html;
         }
-
-        html += `
-            <div style="background: #f9f9f9; padding: 22px; border-radius: 8px; border: 1px solid #cbd5e1; border-left: 4px solid var(--warna-kua); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); height: 100%; display: flex; flex-direction: column;">
-                <h3 style="color: var(--warna-kua); margin-bottom: 15px; font-size: 1.15rem; font-weight: 700; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; text-align: center;">${kategori}</h3>
-                <div style="font-size: 0.95rem; line-height: 1.6; flex-grow: 1;">${keteranganHTML}</div>
-            </div>
-        `;
-    });
-    
-    html += '</div>';
-    wadah.innerHTML = html;
-}
-
 
         function tampilkanKalenderDigital() {
             const sekarang = new Date();
@@ -912,7 +915,7 @@
             ];
                     
             let tglHijriah = d - 1; 
-            let blnHijriah = bulanHijriah[m - 1];
+            let blnHijriah = bulanHijriah[m - 2 < 0 ? 11 : m - 2];
             let thnHijriah = y;
 
             if (tglHijriah <= 0) {
@@ -940,3 +943,5 @@
     </script>
 </body>
 </html>
+
+```
