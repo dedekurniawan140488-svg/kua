@@ -31,7 +31,7 @@
             overflow: hidden; 
         }
 
-        /* --- STYLE SPLASH SCREEN (LOADING ANIMASI) --- */
+        /* --- STYLE SPLASH SCREEN (LAYAR PEMBUKA) --- */
         #splash-screen {
             position: fixed;
             top: 0;
@@ -44,12 +44,15 @@
             justify-content: center;
             align-items: center;
             z-index: 10000; /* Paling atas */
-            transition: opacity 1s ease, visibility 1s;
+            transition: opacity 0.8s ease, visibility 0.8s;
+            padding: 20px;
         }
 
         .loader-content {
             text-align: center;
             color: white;
+            max-width: 450px;
+            width: 100%;
         }
 
         .loader-logo {
@@ -72,9 +75,11 @@
         }
 
         .loader-subtext {
-            font-size: 0.9rem;
-            color: var(--warna-aksen);
-            margin-bottom: 30px;
+            font-size: 0.95rem;
+            color: #ffffff;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            transition: color 0.3s ease;
         }
 
         /* Progress Bar */
@@ -85,6 +90,7 @@
             border-radius: 10px;
             margin: 0 auto;
             overflow: hidden;
+            transition: all 0.3s ease;
         }
 
         .progress-fill {
@@ -92,7 +98,54 @@
             height: 100%;
             background: var(--warna-aksen);
             box-shadow: 0 0 10px var(--warna-aksen);
-            transition: width 10s linear; /* Sesuai permintaan 10 detik */
+            /* Transisi linear 100ms agar pengisian konstan terlihat sangat halus */
+            transition: width 0.1s linear; 
+        }
+
+        /* Tombol Aksi Alternatif saat Loading Lambat */
+        .wrapper-tombol-loading {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+            pointer-events: none;
+        }
+
+        .wrapper-tombol-loading.tampil {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .btn-loading-opsi {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-loading-opsi:hover {
+            background: white;
+            color: var(--warna-kua);
+        }
+
+        .btn-loading-opsi.akses-cepat {
+            border-color: var(--warna-aksen);
+            color: var(--warna-aksen);
+        }
+
+        .btn-loading-opsi.akses-cepat:hover {
+            background: var(--warna-aksen);
+            color: var(--warna-kua);
         }
 
         /* --- PEMBUNGKUS MENU & RUNNING TEXT (FIXED DI ATAS) --- */
@@ -411,16 +464,32 @@
 </head>
 <body>
 
+    <!-- ========================================== -->
+    <!-- BAGIAN SPLASH SCREEN (LAYAR PEMBUKA DINAMIS) -->
+    <!-- ========================================== -->
     <div id="splash-screen">
         <div class="loader-content">
             <img src="https://raw.githubusercontent.com/dedekurniawan140488-svg/kua/refs/heads/main/logo-kemenag-png-1png.png" class="loader-logo" alt="Logo Kemenag">
+            
             <div class="loader-text">KUA DIGITAL</div>
-            <div class="loader-subtext">KANTOR URUSAN AGAMA TAMBUSAI UTARA</div>
-            <div class="progress-container">
+            <div id="loading-message" class="loader-subtext">Menyiapkan Konten KUA Tambusai Utara...</div>
+            
+            <div class="progress-container" id="bar-container">
                 <div id="progress-fill" class="progress-fill"></div>
+            </div>
+
+            <!-- Opsi Tambahan Jika Terjadi Kendala Jaringan (Muncul setelah 10 Detik) -->
+            <div class="wrapper-tombol-loading" id="loading-actions">
+                <button class="btn-loading-opsi" onclick="location.reload();">
+                    <i class="fas fa-sync-alt"></i> Coba Muat Ulang
+                </button>
+                <button class="btn-loading-opsi akses-cepat" onclick="hilangkanSplashScreen();">
+                    <i class="fas fa-sign-in-alt"></i> Tetap Masuk Aplikasi
+                </button>
             </div>
         </div>
     </div>
+    <!-- ========================================== -->
 
     <div class="header-fixed-wrapper" id="pembungkus-atas">
         <header>
@@ -508,6 +577,10 @@
         let slideIndexSekarang = 0;
         let totalSlide = 0;
         let intervalSlider;
+        let splashScreenSelesai = false; 
+        
+        let progressPersen = 0;
+        let loadingInterval;
 
         function sesuaikanJarakKontenAtas() {
             const tinggiWrapper = document.getElementById('pembungkus-atas').offsetHeight;
@@ -532,6 +605,35 @@
             sesuaikanJarakKontenAtas();
         }
 
+        // --- MANAJEMEN PROGRESS BAR ---
+        function setProgressBar(persen) {
+            const progressFill = document.getElementById('progress-fill');
+            if (progressFill) {
+                progressFill.style.width = persen + "%";
+            }
+        }
+
+        // --- FUNGSI HILANGKAN LOADING SCREEN ---
+        function hilangkanSplashScreen() {
+            if (splashScreenSelesai) return; 
+            splashScreenSelesai = true;
+
+            // Pastikan interval dihentikan dan progress langsung melesat ke 100%
+            clearInterval(loadingInterval);
+            setProgressBar(100); 
+
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                if(splash) {
+                    splash.style.opacity = '0';
+                    setTimeout(() => {
+                        splash.style.visibility = 'hidden';
+                        document.body.style.overflow = 'auto'; 
+                    }, 800);
+                }
+            }, 400);
+        }
+
         async function ambilDataSpreadsheet() {
             try {
                 const urlAntiCache = SCRIPT_URL + (SCRIPT_URL.includes('?') ? '&' : '?') + '_=' + new Date().getTime();
@@ -546,12 +648,31 @@
                 
                 setTimeout(sesuaikanJarakKontenAtas, 300);
 
+                // Selesai dengan sukses! Tutup loading screen
+                hilangkanSplashScreen();
+
             } catch (error) {
                 console.error("Gagal terhubung ke spreadsheet:", error);
+                clearInterval(loadingInterval);
+                
                 const wadahBerita = document.getElementById('konten-berita');
                 if(wadahBerita && !wadahBerita.innerHTML.includes('berita-card')) {
                     wadahBerita.innerHTML = '<p style="padding:20px; color:red;">Gagal memuat berita. Periksa koneksi internet.</p>';
                 }
+                
+                // Beritahu pengguna di layar loading tentang error
+                const teksStatus = document.getElementById('loading-message');
+                if (teksStatus) {
+                    teksStatus.innerHTML = "<span style='color: #ffc107; font-weight: bold;'>Gagal memuat konten.</span><br>Maaf, periksa kembali jaringan internet Anda atau coba muat ulang halaman.";
+                }
+                
+                // Sembunyikan bar loading karena mengalami kendala/timeout
+                const barContainer = document.getElementById('bar-container');
+                if (barContainer) barContainer.style.opacity = '0.3';
+
+                // Munculkan opsi tombol secara instan
+                const wrapperTombol = document.getElementById('loading-actions');
+                if (wrapperTombol) wrapperTombol.classList.add('tampil');
             }
         }
         
@@ -790,31 +911,47 @@
             if (elemenKalender) elemenKalender.innerHTML = teksLengkap;
         }
 
-        // --- FUNGSI LOADING DAN SPLASH SCREEN ---
+        // --- ANIMASI LOADING PEMBUKA AWAL ---
         function startLoadingAnimation() {
-            const progressFill = document.getElementById('progress-fill');
-            // Mulai mengisi bar (berjalan 10 detik di CSS)
-            setTimeout(() => {
-                if(progressFill) progressFill.style.width = "100%";
+            progressPersen = 0;
+            setProgressBar(progressPersen);
+
+            // Setiap 100 milidetik, naikkan progress bar sebanyak 1% secara halus
+            // Menuju batas target 90% (memberikan kepastian visual loading terus berjalan)
+            loadingInterval = setInterval(() => {
+                if (progressPersen < 90) {
+                    progressPersen += 1;
+                    setProgressBar(progressPersen);
+                }
             }, 100);
 
-            // Sembunyikan Splash Screen setelah 10 detik
+            // TIMER DETEKSI JARINGAN LAMBAT (10 DETIK):
             setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                if(splash) {
-                    splash.style.opacity = '0';
-                    setTimeout(() => {
-                        splash.style.visibility = 'hidden';
-                        document.body.style.overflow = 'auto'; // Aktifkan scroll kembali
-                    }, 1000);
+                if (!splashScreenSelesai) {
+                    clearInterval(loadingInterval);
+                    
+                    const teksStatus = document.getElementById('loading-message');
+                    if (teksStatus) {
+                        teksStatus.innerHTML = "<span style='color: #ffc107; font-weight: bold;'>Maaf, butuh waktu lebih lama untuk memuat data.</span><br>Mohon periksa kembali jaringan internet Anda atau tunggu sebentar...";
+                    }
+                    
+                    // Sembunyikan bar loading karena mengalami kendala/timeout
+                    const barContainer = document.getElementById('bar-container');
+                    if (barContainer) barContainer.style.opacity = '0.3';
+
+                    // Tampilkan barisan tombol "Coba Muat Ulang" & "Tetap Masuk"
+                    const wrapperTombol = document.getElementById('loading-actions');
+                    if (wrapperTombol) {
+                        wrapperTombol.classList.add('tampil');
+                    }
                 }
-            }, 10000);
+            }, 10000); 
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            startLoadingAnimation(); // Jalankan loading screen
+            startLoadingAnimation(); 
             tampilkanKalenderDigital();
-            ambilDataSpreadsheet();
+            ambilDataSpreadsheet(); 
             sesuaikanJarakKontenAtas();
             setInterval(ambilDataSpreadsheet, 5 * 60 * 1000); 
         });
@@ -823,6 +960,5 @@
     </script>
 </body>
 </html>
-
 
 ```
