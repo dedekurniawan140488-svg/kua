@@ -365,19 +365,19 @@
             background-color: var(--warna-kua);
         }
 
-        /* --- GAYA PROFIL PEGAWAI --- */
+        /* --- GAYA KARTU PEGAWAI, LAYANAN, & INFORMASI --- */
         .kartu-pegawai {
             background: #f9f9f9;
             border: 1px solid #cbd5e1;
             border-radius: 10px;
             padding: 20px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.10);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.10); /* Bayangan blur di sekitar kartu */
             transition: transform 0.2s, box-shadow 0.2s;
         }
         .kartu-pegawai:hover {
             transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12); /* Bayangan sedikit lebih tebal & blur ketika hover */
         }
         .avatar-pegawai {
             width: 120px;
@@ -402,6 +402,32 @@
         .kartu-kepala {
             max-width: 280px;
             margin: 0 auto;
+        }
+
+        /* GAYA KARTU MENU LAYANAN DAN INFORMASI (Sama Persis dengan Kartu Pegawai) */
+        .kartu-layanan, .kartu-informasi {
+            background: #f9f9f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 22px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.10); /* Bayangan blur merata */
+            transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%;
+        }
+
+        .kartu-layanan {
+            border-left: 5px solid var(--warna-kua); /* Penanda garis hijau di sisi kiri */
+        }
+
+        .kartu-informasi {
+            border-left: 4px solid var(--warna-kua); /* Penanda garis hijau di sisi kiri */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .kartu-layanan:hover, .kartu-informasi:hover {
+            transform: translateY(-5px); /* Efek melayang sedikit ke atas */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12); /* Bayangan melebar lembut saat hover */
         }
 
         .btn-cetak {
@@ -618,7 +644,6 @@
             if (splashScreenSelesai) return; 
             splashScreenSelesai = true;
 
-            // Pastikan interval dihentikan dan progress langsung melesat ke 100%
             clearInterval(loadingInterval);
             setProgressBar(100); 
 
@@ -751,8 +776,8 @@
             const wadah = document.getElementById('konten-berita');
             const indikatorGaris = document.querySelectorAll('.indicator-line');
             if(wadah) wadah.style.transform = `translateX(-${slideIndexSekarang * 100}%)`;
-            indikatorGaris.forEach((garis, index) => {
-                index === slideIndexSekarang ? garis.classList.add('active') : garis.classList.remove('active');
+            indikatorGaris.forEach((grid, index) => {
+                index === slideIndexSekarang ? grid.classList.add('active') : grid.classList.remove('active');
             });
         }
 
@@ -823,10 +848,11 @@
                 const imgCgp = urlFotoCgp ? `<img src="${urlFotoCgp}" style="width: 55px; height: 70px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1;" />` : `<div style="width: 55px; height: 70px; background: #e2e8f0; color: #94a3b8; display: flex; align-items: center; justify-content: center; border-radius: 4px;"><i class="fas fa-user"></i></div>`;
                 const imgCgw = urlFotoCgw ? `<img src="${urlFotoCgw}" style="width: 55px; height: 70px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1;" />` : `<div style="width: 55px; height: 70px; background: #e2e8f0; color: #94a3b8; display: flex; align-items: center; justify-content: center; border-radius: 4px;"><i class="fas fa-user-female"></i></div>`;
 
+                // PERUBAHAN: Garis pemisah atas-bawah pada kartu pengumuman diganti dari "dashed" menjadi "solid"
                 html += `
                     <div style="background: #f9f9f9; padding: 22px; border-radius: 10px; border: 1px solid #cbd5e1; border-top: 5px solid var(--warna-kua); box-shadow: 0 4px 12px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between; position: relative;">
                         <div style="position: absolute; top: -1px; left: 15px; background: var(--warna-kua); color: #ffffff; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">#${nomorUrut}</div>
-                        <div style="text-align: center; margin-bottom: 15px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 12px;">
+                        <div style="text-align: center; margin-bottom: 15px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 12px;">
                             <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #334155;"><i class="fas fa-calendar-alt" style="color: var(--warna-kua);"></i> <b>${tanggal}</b> | <i class="fas fa-clock" style="color: #64748b;"></i> <b>${jam} WIB</b></p>
                         </div>
                         <div style="display: flex; flex-direction: column; gap: 12px; flex-grow: 1;">
@@ -848,7 +874,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed #e2e8f0; font-size: 0.85rem; color: #334155;">
+                        <div style="margin-top: 15px; padding-top: 12px; border-top: 1.5px solid #e2e8f0; font-size: 0.85rem; color: #334155;">
                             <div><i class="fas fa-building" style="color: var(--warna-kua);"></i> Tempat: <b>${tempat}</b></div>
                             <div style="display: flex; gap: 6px;"><i class="fas fa-map-marker-alt" style="color: #ef4444;"></i> Alamat: <b>${lokasi}</b></div>
                         </div>
@@ -872,7 +898,14 @@
                     poinPoin.forEach(poin => { if (poin.trim()) detailHTML += `<li style="margin-bottom: 5px;">${poin.trim()}</li>`; });
                     detailHTML += '</ol>';
                 }
-                html += `<div style="background: #f9f9f9; padding: 22px; border-radius: 8px; border-left: 5px solid var(--warna-kua); border: 1px solid #cbd5e1; border-left: 5px solid var(--warna-kua);"><h3>${nama}</h3><div>${detailHTML}</div></div>`;
+                
+                // PERUBAHAN: Mengubah border-bottom judul kartu Layanan dari "dashed" menjadi "solid 2px" (seperti Informasi)
+                html += `
+                    <div class="kartu-layanan">
+                        <h3 style="color: var(--warna-kua); margin-bottom: 12px; font-size: 1.15rem; font-weight: 700; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">${nama}</h3>
+                        <div style="font-size: 0.95rem; color: #334155; line-height: 1.6;">${detailHTML}</div>
+                    </div>
+                `;
             });
             html += '</div>';
             wadah.innerHTML = html;
@@ -891,13 +924,19 @@
                         if (poin.trim()) {
                             if (poin.includes(':')) {
                                 const [kiri, ...kanan] = poin.split(':');
-                                keteranganHTML += `<li style="display: flex; justify-content: space-between; border-bottom: 1px dotted #e2e8f0; padding: 4px 0;"><strong>${kiri.trim()}</strong><span style="color:var(--warna-kua)">${kanan.join(':').trim()}</span></li>`;
-                            } else keteranganHTML += `<li>${poin.trim()}</li>`;
+                                // PERUBAHAN: Mengubah pemisah list dari "dotted" menjadi "solid" tipis agar lebih bersih dan rapi
+                                keteranganHTML += `<li style="display: flex; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding: 6px 0;"><strong>${kiri.trim()}</strong><span style="color:var(--warna-kua)">${kanan.join(':').trim()}</span></li>`;
+                            } else keteranganHTML += `<li style="padding: 4px 0;">${poin.trim()}</li>`;
                         }
                     });
                 }
                 keteranganHTML += '</ul>';
-                html += `<div style="background: #f9f9f9; padding: 22px; border-radius: 8px; border-left: 4px solid var(--warna-kua); border: 1px solid #cbd5e1; border-left: 4px solid var(--warna-kua);"><h3 style="text-align:center;">${kategori}</h3><div>${keteranganHTML}</div></div>`;
+                html += `
+                    <div class="kartu-informasi">
+                        <h3 style="color: var(--warna-kua); margin-bottom: 15px; font-size: 1.15rem; font-weight: 700; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; text-align: center;">${kategori}</h3>
+                        <div style="font-size: 0.95rem; line-height: 1.6; flex-grow: 1;">${keteranganHTML}</div>
+                    </div>
+                `;
             });
             html += '</div>';
             wadah.innerHTML = html;
@@ -917,7 +956,7 @@
             setProgressBar(progressPersen);
 
             // Setiap 100 milidetik, naikkan progress bar sebanyak 1% secara halus
-            // Menuju batas target 90% (memberikan kepastian visual loading terus berjalan)
+            // Menuju batas target 90%
             loadingInterval = setInterval(() => {
                 if (progressPersen < 90) {
                     progressPersen += 1;
@@ -935,11 +974,9 @@
                         teksStatus.innerHTML = "<span style='color: #ffc107; font-weight: bold;'>Maaf, butuh waktu lebih lama untuk memuat data.</span><br>Mohon periksa kembali jaringan internet Anda atau tunggu sebentar...";
                     }
                     
-                    // Sembunyikan bar loading karena mengalami kendala/timeout
                     const barContainer = document.getElementById('bar-container');
                     if (barContainer) barContainer.style.opacity = '0.3';
 
-                    // Tampilkan barisan tombol "Coba Muat Ulang" & "Tetap Masuk"
                     const wrapperTombol = document.getElementById('loading-actions');
                     if (wrapperTombol) {
                         wrapperTombol.classList.add('tampil');
