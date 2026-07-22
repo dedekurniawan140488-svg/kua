@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -100,7 +99,6 @@
             height: 100%;
             background: var(--warna-aksen);
             box-shadow: 0 0 10px var(--warna-aksen);
-            /* Transisi linear 100ms agar pengisian konstan terlihat sangat halus */
             transition: width 0.1s linear; 
         }
 
@@ -374,12 +372,12 @@
             border-radius: 10px;
             padding: 20px;
             text-align: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.10); /* Bayangan blur di sekitar kartu */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.10);
             transition: transform 0.2s, box-shadow 0.2s;
         }
         .kartu-pegawai:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12); /* Bayangan sedikit lebih tebal & blur ketika hover */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
         }
         .avatar-pegawai {
             width: 120px;
@@ -406,30 +404,29 @@
             margin: 0 auto;
         }
 
-        /* GAYA KARTU MENU LAYANAN DAN INFORMASI (Sama Persis dengan Kartu Pegawai) */
         .kartu-layanan, .kartu-informasi {
             background: #f9f9f9;
             border: 1px solid #cbd5e1;
             border-radius: 10px;
             padding: 22px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.10); /* Bayangan blur merata */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.10);
             transition: transform 0.2s, box-shadow 0.2s;
             height: 100%;
         }
 
         .kartu-layanan {
-            border-left: 5px solid var(--warna-kua); /* Penanda garis hijau di sisi kiri */
+            border-left: 5px solid var(--warna-kua);
         }
 
         .kartu-informasi {
-            border-left: 4px solid var(--warna-kua); /* Penanda garis hijau di sisi kiri */
+            border-left: 4px solid var(--warna-kua);
             display: flex;
             flex-direction: column;
         }
 
         .kartu-layanan:hover, .kartu-informasi:hover {
-            transform: translateY(-5px); /* Efek melayang sedikit ke atas */
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12); /* Bayangan melebar lembut saat hover */
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
         }
 
         .btn-cetak {
@@ -460,6 +457,14 @@
             margin: 0 auto;
             padding: 10px;
             background: #ffffff;
+        }
+
+        /* Wrapper Khusus Chart Informasi */
+        .chart-card-container {
+            position: relative;
+            height: 280px;
+            width: 100%;
+            margin-top: 10px;
         }
 
         footer {
@@ -499,6 +504,7 @@
         @media (max-width: 768px) {
             .berita-card img.berita-img { height: 220px; }
             .grafik-wrapper { height: 240px; }
+            .chart-card-container { height: 240px; }
         }
     </style>
 </head>
@@ -518,7 +524,7 @@
                 <div id="progress-fill" class="progress-fill"></div>
             </div>
 
-            <!-- Opsi Tambahan Jika Terjadi Kendala Jaringan (Muncul setelah 10 Detik) -->
+            <!-- Opsi Tambahan Jika Terjadi Kendala Jaringan -->
             <div class="wrapper-tombol-loading" id="loading-actions">
                 <button class="btn-loading-opsi" onclick="location.reload();">
                     <i class="fas fa-sync-alt"></i> Coba Muat Ulang
@@ -611,7 +617,7 @@
 
         <div id="informasi" class="halaman">
             <div class="seksi">
-                <h2>Layanan Informasi</h2>
+                <h2>Layanan Informasi (Grafik & Statistik)</h2>
                 <div id="konten-informasi"></div>
             </div>
         </div>
@@ -632,7 +638,8 @@
         
         let progressPersen = 0;
         let loadingInterval;
-        let chartInstance = null; // Instansi untuk grafik Chart.js
+        let chartInstance = null; // Instansi grafik nikah utama
+        let chartInformasiInstances = {}; // Menyimpan instansi chart-chart di menu informasi
 
         function sesuaikanJarakKontenAtas() {
             const tinggiWrapper = document.getElementById('pembungkus-atas').offsetHeight;
@@ -640,23 +647,24 @@
             if(kontenUtama) kontenUtama.style.marginTop = (tinggiWrapper + 0) + "px";
         }
 
-        // --- CUSTOM PLUGIN UNTUK MENAMPILKAN ANGKA DI ATAS BATANG ---
-        const pluginAngkaDiAtasBatang = {
-            id: 'pluginAngkaDiAtasBatang',
+        // --- CUSTOM PLUGIN UNTUK MENAMPILKAN ANGKA DI ATAS TITIK DATA (LINE/AREA CHART) ---
+        const pluginAngkaDiAtasTitik = {
+            id: 'pluginAngkaDiAtasTitik',
             afterDatasetsDraw(chart, args, options) {
                 const { ctx } = chart;
                 ctx.save();
-                ctx.font = 'bold 12px Segoe UI, sans-serif';
-                ctx.fillStyle = '#0f5132'; // Warna hijau KUA agar serasi
+                ctx.font = 'bold 12px "Segoe UI", sans-serif';
+                ctx.fillStyle = '#0f5132'; 
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'bottom';
 
                 chart.data.datasets.forEach((dataset, i) => {
                     const meta = chart.getDatasetMeta(i);
-                    meta.data.forEach((bar, index) => {
+                    meta.data.forEach((point, index) => {
                         const dataVal = dataset.data[index];
-                        // Tulis teks angka tepat di atas koordinat Y dari bar (minus 4px spasi)
-                        ctx.fillText(dataVal, bar.x, bar.y - 4);
+                        if (dataVal !== undefined && dataVal !== null) {
+                            ctx.fillText(dataVal, point.x, point.y - 8);
+                        }
                     });
                 });
                 ctx.restore();
@@ -720,12 +728,11 @@
                 prosesInformasi(database['informasi']);
                 prosesProfil(database['profil']); 
                 
-                // Proses data grafik nikah
+                // Proses data grafik nikah beranda
                 prosesGrafik(database['grafik'] || database['statistik'] || database['peristiwa']);
 
                 setTimeout(sesuaikanJarakKontenAtas, 300);
 
-                // Selesai dengan sukses! Tutup loading screen
                 hilangkanSplashScreen();
 
             } catch (error) {
@@ -737,20 +744,17 @@
                     wadahBerita.innerHTML = '<p style="padding:20px; color:red;">Gagal memuat berita. Periksa koneksi internet.</p>';
                 }
 
-                // Tetap panggil proses grafik dengan data kosong (agar memicu data cadangan)
                 prosesGrafik(null);
+                prosesInformasi(null); // Gunakan data fallback grafik di menu informasi
                 
-                // Beritahu pengguna di layar loading tentang error
                 const teksStatus = document.getElementById('loading-message');
                 if (teksStatus) {
                     teksStatus.innerHTML = "<span style='color: #ffc107; font-weight: bold;'>Gagal memuat konten.</span><br>Maaf, periksa kembali jaringan internet Anda atau coba muat ulang halaman.";
                 }
                 
-                // Sembunyikan bar loading karena mengalami kendala/timeout
                 const barContainer = document.getElementById('bar-container');
                 if (barContainer) barContainer.style.opacity = '0.3';
 
-                // Munculkan opsi tombol secara instan
                 const wrapperTombol = document.getElementById('loading-actions');
                 if (wrapperTombol) wrapperTombol.classList.add('tampil');
             }
@@ -775,7 +779,7 @@
             return nilai;
         }
 
-        // --- FUNGSI PROSES GRAFIK NIKAH (DENGAN LABEL ANGKA DI ATAS) ---
+        // --- FUNGSI PROSES GRAFIK NIKAH (BERANDA - MODERN LINE / AREA CHART) ---
         function prosesGrafik(data) {
             const canvas = document.getElementById('grafikNikah');
             if (!canvas) return;
@@ -783,7 +787,6 @@
             let labels = [];
             let datasetJumlah = [];
 
-            // Jika ada data riil dari Google Sheet
             if (data && data.length > 0) {
                 const dataUrut = [...data].sort((a, b) => {
                     const thnA = parseInt(dapatkanNilaiKolom(a, 'tahun')) || 0;
@@ -801,11 +804,9 @@
                 });
             } 
 
-            // Fallback (Data Cadangan) jika tab 'grafik' tidak ada atau kosong
             if (labels.length === 0) {
                 labels = ["2022 M", "2023 M", "2024 M", "2025 M", "2026 M (Est)"];
                 datasetJumlah = [134, 156, 189, 212, 230];
-                console.log("Menggunakan data fallback untuk grafik tahunan.");
             }
 
             if (chartInstance) {
@@ -813,23 +814,35 @@
             }
 
             const ctx = canvas.getContext('2d');
+            
+            // Buat Gradien Warna Modern di Bawah Garis
+            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(15, 81, 50, 0.45)');
+            gradient.addColorStop(1, 'rgba(15, 81, 50, 0.01)');
+
             chartInstance = new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: {
                     labels: labels,
                     datasets: [{
                         label: 'Jumlah Peristiwa Nikah',
                         data: datasetJumlah,
-                        backgroundColor: 'rgba(15, 81, 50, 0.85)', // KUA Green
+                        fill: true,
+                        backgroundColor: gradient,
                         borderColor: '#0f5132',
-                        borderWidth: 2,
-                        borderRadius: 6, // Sudut batang membulat modern
-                        hoverBackgroundColor: '#ffc107', // Aksen Kuning Emas saat di-hover
-                        hoverBorderColor: '#e5ad06',
+                        borderWidth: 3,
+                        tension: 0.4, // Garis melengkung (Spline)
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#0f5132',
+                        pointBorderWidth: 3,
+                        pointRadius: 6,
+                        pointHoverRadius: 9,
+                        pointHoverBackgroundColor: '#ffc107',
+                        pointHoverBorderColor: '#0f5132',
+                        pointHoverBorderWidth: 3
                     }]
                 },
-                // Daftarkan plugin custom kita ke grafik ini
-                plugins: [pluginAngkaDiAtasBatang],
+                plugins: [pluginAngkaDiAtasTitik],
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
@@ -839,16 +852,18 @@
                             position: 'top',
                             labels: {
                                 color: '#212529',
-                                font: {
-                                    weight: 'bold',
-                                    family: 'Segoe UI'
-                                }
+                                font: { weight: 'bold', family: 'Segoe UI' }
                             }
                         },
                         tooltip: {
+                            backgroundColor: 'rgba(15, 81, 50, 0.9)',
+                            titleFont: { size: 13, weight: 'bold' },
+                            bodyFont: { size: 12 },
+                            padding: 10,
+                            displayColors: false,
                             callbacks: {
                                 label: function(context) {
-                                    return ` ${context.parsed.y} Peristiwa Pernikahan`;
+                                    return ` Total: ${context.parsed.y} Peristiwa Pernikahan`;
                                 }
                             }
                         }
@@ -856,25 +871,13 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            // Menambahkan padding atas agar angka di atas bar tertinggi tidak terpotong
-                            grace: '10%', 
-                            ticks: {
-                                color: '#4a5568'
-                            },
-                            grid: {
-                                color: '#e2e8f0'
-                            }
+                            grace: '15%', 
+                            ticks: { color: '#4a5568' },
+                            grid: { color: '#e2e8f0' }
                         },
                         x: {
-                            ticks: {
-                                color: '#4a5568',
-                                font: {
-                                    weight: 'bold'
-                                }
-                            },
-                            grid: {
-                                display: false
-                            }
+                            ticks: { color: '#4a5568', font: { weight: 'bold' } },
+                            grid: { display: false }
                         }
                     }
                 }
@@ -944,12 +947,8 @@
 
         function lompatKeSlide(index) {
             slideIndexSekarang = index;
-            updatePosPositionSlider();
-            jalankanSliderOtomatis(); 
-        }
-
-        function updatePosPositionSlider() {
             updatePosisiSlider();
+            jalankanSliderOtomatis(); 
         }
 
         function prosesProfil(data) {
@@ -1001,13 +1000,10 @@
                 
                 const cgp = dapatkanNilaiKolom(item, 'calon suami') || '-';
                 const ayahCgp = dapatkanNilaiKolom(item, 'ayah cgp') || '-';
-                const ibuCgp = dapatkanNilaiKolom(item, 'ibu cgp') || '-';
                 const urlFotoCgp = dapatkanNilaiKolom(item, 'foto cgp') || '';
 
                 const cgw = dapatkanNilaiKolom(item, 'calon istri') || '-';
                 const ayahCgw = dapatkanNilaiKolom(item, 'ayah cgw') || '-';
-                const ibuCgw = dapatkanNilaiKolom(item, 'ibu cgw') || '-';
-                const wali = dapatkanNilaiKolom(item, 'wali') || '-';
                 const urlFotoCgw = dapatkanNilaiKolom(item, 'foto cgw') || '';
 
                 const imgCgp = urlFotoCgp ? `<img src="${urlFotoCgp}" style="width: 55px; height: 70px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1;" />` : `<div style="width: 55px; height: 70px; background: #e2e8f0; color: #94a3b8; display: flex; align-items: center; justify-content: center; border-radius: 4px;"><i class="fas fa-user"></i></div>`;
@@ -1074,34 +1070,167 @@
             wadah.innerHTML = html;
         }
 
+        // --- FUNGSI PROSES INFORMASI (MEMPERBAARUI TAMPILAN CHART) ---
         function prosesInformasi(data) {
             const wadah = document.getElementById('konten-informasi');
-            if (!wadah || !data) return;
-            let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">';
-            data.forEach(item => {
-                const kategori = dapatkanNilaiKolom(item, 'kategori') || 'Informasi';
-                const keteranganRaw = dapatkanNilaiKolom(item, 'keterangan') || '-';
-                let keteranganHTML = '<ul style="list-style: none;">';
-                if (keteranganRaw) {
-                    keteranganRaw.toString().split(/\n|;/).forEach(poin => {
-                        if (poin.trim()) {
-                            if (poin.includes(':')) {
-                                const [kiri, ...kanan] = poin.split(':');
-                                keteranganHTML += `<li style="display: flex; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding: 6px 0;"><strong>${kiri.trim()}</strong><span style="color:var(--warna-kua)">${kanan.join(':').trim()}</span></li>`;
-                            } else keteranganHTML += `<li style="padding: 4px 0;">${poin.trim()}</li>`;
-                        }
-                    });
-                }
-                keteranganHTML += '</ul>';
+            if (!wadah) return;
+
+            // Kategori bawaan beserta konfigurasinya
+            const daftarKategori = [
+                { id: 'peristiwa', nama: 'Data Peristiwa Nikah Tahun 2026', type: 'line' },
+                { id: 'ibadah', nama: 'Jumlah Rumah Ibadah', type: 'doughnut' },
+                { id: 'penduduk', nama: 'Data Penduduk / Agama', type: 'pie' }
+            ];
+
+            let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">';
+            
+            daftarKategori.forEach(kat => {
                 html += `
                     <div class="kartu-informasi">
-                        <h3 style="color: var(--warna-kua); margin-bottom: 15px; font-size: 1.15rem; font-weight: 700; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; text-align: center;">${kategori}</h3>
-                        <div style="font-size: 0.95rem; line-height: 1.6; flex-grow: 1;">${keteranganHTML}</div>
+                        <h3 style="color: var(--warna-kua); margin-bottom: 15px; font-size: 1.1rem; font-weight: 700; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; text-align: center;">
+                            <i class="fas fa-chart-line"></i> ${kat.nama}
+                        </h3>
+                        <div class="chart-card-container">
+                            <canvas id="chart-info-${kat.id}"></canvas>
+                        </div>
                     </div>
                 `;
             });
             html += '</div>';
             wadah.innerHTML = html;
+
+            // Hancurkan chart lama jika ada agar tidak bentrok
+            Object.keys(chartInformasiInstances).forEach(key => {
+                if(chartInformasiInstances[key]) chartInformasiInstances[key].destroy();
+            });
+
+            // Olah Data dari Google Spreadsheet jika ada
+            let dataParsed = {
+                peristiwa: { labels: [], values: [] },
+                ibadah: { labels: [], values: [] },
+                penduduk: { labels: [], values: [] }
+            };
+
+            if (data && data.length > 0) {
+                data.forEach(item => {
+                    const katName = (dapatkanNilaiKolom(item, 'kategori') || '').toLowerCase();
+                    const ketRaw = dapatkanNilaiKolom(item, 'keterangan') || '';
+
+                    let targetKey = '';
+                    if (katName.includes('nikah') || katName.includes('peristiwa')) targetKey = 'peristiwa';
+                    else if (katName.includes('ibadah') || katName.includes('masjid')) targetKey = 'ibadah';
+                    else if (katName.includes('penduduk') || katName.includes('agama')) targetKey = 'penduduk';
+
+                    if (targetKey && ketRaw) {
+                        const baris = ketRaw.toString().split(/\n|;/);
+                        baris.forEach(b => {
+                            if (b.includes(':')) {
+                                const [label, val] = b.split(':');
+                                const num = parseInt(val.replace(/[^0-9]/g, '')) || 0;
+                                if (label.trim()) {
+                                    dataParsed[targetKey].labels.push(label.trim());
+                                    dataParsed[targetKey].values.push(num);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+
+            // --- 1. RENDER CHART PERISTIWA NIKAH (MODERN AREA CHART) ---
+            let labelsPeristiwa = dataParsed.peristiwa.labels.length ? dataParsed.peristiwa.labels : ["2022", "2023", "2024", "2025", "2026"];
+            let valuesPeristiwa = dataParsed.peristiwa.values.length ? dataParsed.peristiwa.values : [134, 156, 189, 212, 230];
+
+            const ctxPeristiwa = document.getElementById('chart-info-peristiwa');
+            if (ctxPeristiwa) {
+                const ctx = ctxPeristiwa.getContext('2d');
+                const gradientInfo = ctx.createLinearGradient(0, 0, 0, 250);
+                gradientInfo.addColorStop(0, 'rgba(15, 81, 50, 0.4)');
+                gradientInfo.addColorStop(1, 'rgba(15, 81, 50, 0.01)');
+
+                chartInformasiInstances['peristiwa'] = new Chart(ctxPeristiwa, {
+                    type: 'line',
+                    data: {
+                        labels: labelsPeristiwa,
+                        datasets: [{
+                            label: 'Jumlah Nikah',
+                            data: valuesPeristiwa,
+                            fill: true,
+                            backgroundColor: gradientInfo,
+                            borderColor: '#0f5132',
+                            borderWidth: 2.5,
+                            tension: 0.4,
+                            pointBackgroundColor: '#ffffff',
+                            pointBorderColor: '#0f5132',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 7
+                        }]
+                    },
+                    plugins: [pluginAngkaDiAtasTitik],
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { 
+                            y: { beginAtZero: true, grace: '15%' },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+
+            // --- 2. RENDER CHART RUMAH IBADAH ---
+            let labelsIbadah = dataParsed.ibadah.labels.length ? dataParsed.ibadah.labels : ["Masjid", "Musholla", "Gereja", "Vihara"];
+            let valuesIbadah = dataParsed.ibadah.values.length ? dataParsed.ibadah.values : [45, 62, 12, 2];
+
+            const ctxIbadah = document.getElementById('chart-info-ibadah');
+            if (ctxIbadah) {
+                chartInformasiInstances['ibadah'] = new Chart(ctxIbadah, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labelsIbadah,
+                        datasets: [{
+                            data: valuesIbadah,
+                            backgroundColor: ['#0f5132', '#ffc107', '#0284c7', '#ec4899', '#8b5cf6'],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+                        }
+                    }
+                });
+            }
+
+            // --- 3. RENDER CHART PENDUDUK / AGAMA ---
+            let labelsPenduduk = dataParsed.penduduk.labels.length ? dataParsed.penduduk.labels : ["Islam", "Kristen", "Katolik", "Budha", "Hindu"];
+            let valuesPenduduk = dataParsed.penduduk.values.length ? dataParsed.penduduk.values : [35400, 4200, 1500, 300, 50];
+
+            const ctxPenduduk = document.getElementById('chart-info-penduduk');
+            if (ctxPenduduk) {
+                chartInformasiInstances['penduduk'] = new Chart(ctxPenduduk, {
+                    type: 'pie',
+                    data: {
+                        labels: labelsPenduduk,
+                        datasets: [{
+                            data: valuesPenduduk,
+                            backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#6366f1'],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+                        }
+                    }
+                });
+            }
         }
 
         function tampilkanKalenderDigital() {
@@ -1117,8 +1246,6 @@
             progressPersen = 0;
             setProgressBar(progressPersen);
 
-            // Setiap 100 milidetik, naikkan progress bar sebanyak 1% secara halus
-            // Menuju batas target 90%
             loadingInterval = setInterval(() => {
                 if (progressPersen < 90) {
                     progressPersen += 1;
@@ -1126,7 +1253,6 @@
                 }
             }, 100);
 
-            // TIMER DETEKSI JARINGAN LAMBAT (10 DETIK):
             setTimeout(() => {
                 if (!splashScreenSelesai) {
                     clearInterval(loadingInterval);
